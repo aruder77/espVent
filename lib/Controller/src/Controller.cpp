@@ -179,7 +179,7 @@ Controller::Controller()
   ledController = LedController::getInstance();
 
   // register prefs
-  prefs->registerConfigParam("ConfigPortalPin", "Config-Portal Pin", "13", 3, this);
+  prefs->registerConfigParam("ConfigPortalPin", "Config-Portal Pin", "15", 3, this);
 
   // short press -> reset
   // long press 10 sec -> complete reset
@@ -190,6 +190,7 @@ Controller::Controller()
   displayControl = DisplayControl::getInstance();
   modules.addModule(networkControl);
   modules.addModule(displayControl);
+  modules.addModule(new VentilationController());
 
   setup();
 }
@@ -199,7 +200,6 @@ Controller::~Controller() {
 
 void Controller::setup() {
   enterConfigPortalPin = prefs->getInt("ConfigPortalPin");
-  enterConfigPortalPin = 27;
   oneButton = new OneButton(enterConfigPortalPin, true);
   oneButton->setPressTicks(LONG_PRESS_TIME);
   oneButton->attachClick(click);

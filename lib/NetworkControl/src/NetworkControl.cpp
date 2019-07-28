@@ -55,9 +55,9 @@ NetworkControl::NetworkControl() {
 	ledController = LedController::getInstance();
 
 	// initialize prefs
-	prefs->registerConfigParam("clientId", "Client-ID", "esp32Generic", 100, this);
+	prefs->registerConfigParam("clientId", "Client-ID", "espVent", 100, this);
 	prefs->registerConfigParam("wpaKey", "WPA-Key", "~CM3CDUx", 100, this);
-	prefs->registerConfigParam("mqtt-server", "MQTT-Server", "mqtt-server", 100, this);
+	prefs->registerConfigParam("mqtt-server", "MQTT-Server", "192.168.178.27", 100, this);
 
 	mqttClient->setCallback(callback);
 

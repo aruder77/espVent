@@ -33,6 +33,8 @@ DisplayControl *DisplayControl::getInstance()
 }
 
 void DisplayControl::setup() { 
+  Log.notice("initializing TFT display...\n");
+
   tft.init();
   tft.setRotation(1);
   tft.fillScreen(TFT_BLACK);

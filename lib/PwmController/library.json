@@ -1,5 +1,0 @@
-{
-  "name": "PWMController",
-  "frameworks": "arduino",
-  "platforms": "espressif32"
-}

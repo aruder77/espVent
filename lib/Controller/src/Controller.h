@@ -25,6 +25,7 @@
 #include <NetworkModule.h>
 #include <DisplayControl.h>
 #include <OneButton.h>
+#include <VentilationController.h>
 
 /* topics */
 #define OTA_TOPIC "ota"
@@ -115,7 +116,7 @@ class Controller : public NetworkModule, public PrefsClient {
         char md5_check[50];
         SysState state = Runnning_e;
 
-        uint8_t enterConfigPortalPin = 13;
+        uint8_t enterConfigPortalPin = 15;
 
         long timer = 0;
         int loopCounter = 0;
