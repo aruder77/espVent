@@ -237,7 +237,7 @@ void Controller::loop()
 
       //if you get here you have connected to the WiFi
       Log.notice("connected...yeey :)\n");
-    }
+    } 
 
     // reset per double click requested
     if (wasDoubleClicked) {
