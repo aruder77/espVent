@@ -53,30 +53,30 @@ void VentilationController::every100Milliseconds() {
 
 	// send status updates to mqtt
 	if (powerOn != powerOnLast) {
-		networkControl->send("ventilation/status/powerOn", powerOn ? "true" : "false");
+		networkControl->sendStat("powerOn", powerOn ? "true" : "false");
 		powerOnLast = powerOn;
 	}
 	if (speed != speedLast) {
 		char speedStr[5];
 		snprintf(speedStr, 5, "%d", speed);
-		networkControl->send("ventilation/status/speed", speedStr);
+		networkControl->send("speed", speedStr);
 		speedLast = speed;
 	}
 	if (mode != modeLast) {
 		char modeStr[5];
 		snprintf(modeStr, 5, "%d", mode);
-		networkControl->send("ventilation/status/mode", modeStr);
+		networkControl->send("mode", modeStr);
 		modeLast = mode;
 	}
 	if (direction != directionLast) {
-		networkControl->send("ventilation/status/direction", direction ? "true" : "false");
+		networkControl->send("direction", direction ? "true" : "false");
 		directionLast = direction; 
 	}
 	for (int i = 0; i < MOTOR_COUNT; i++) {
 		uint8_t currentSpeed = motors[i]->getTargetSpeed();
 		if (motorSpeedLast[i] != currentSpeed) {
 			char networkStr[100];
-			snprintf(networkStr, sizeof(networkStr), "ventilation/status/motors/%d/speed", i);
+			snprintf(networkStr, sizeof(networkStr), "motors/%d/speed", i);
 			char speedStr[5];
 			snprintf(speedStr, sizeof(speedStr), "%d", currentSpeed);
 			networkControl->send(networkStr, speedStr);
@@ -85,7 +85,7 @@ void VentilationController::every100Milliseconds() {
 		uint8_t currentPwm = motors[i]->getCurrentPwmValue();
 		if (motorPwmLast[i] != currentPwm) {
 			char topicStr[100];
-			snprintf(topicStr, sizeof(topicStr), "ventilation/status/motors/%d/pwm", i);
+			snprintf(topicStr, sizeof(topicStr), "motors/%d/pwm", i);
 			char currentPwmStr[5];
 			snprintf(currentPwmStr, sizeof(currentPwmStr), "%d", currentPwm);
 			networkControl->send(topicStr, currentPwmStr);
@@ -94,7 +94,7 @@ void VentilationController::every100Milliseconds() {
 		bool currentDirection = motors[i]->isTargetDirection();
 		if (motorDirectionLast[i] != currentDirection) {
 			char topicStr[100];
-			snprintf(topicStr, sizeof(topicStr), "ventilation/status/motors/%d/flowDirection", i);			
+			snprintf(topicStr, sizeof(topicStr), "motors/%d/flowDirection", i);			
 			networkControl->send(topicStr, currentDirection ? "in" : "out");
 			motorDirectionLast[i] = currentDirection;
 		}
