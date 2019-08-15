@@ -16,7 +16,7 @@
 
 #define MOTOR_NUMBER = 2
 
-class VentilationController : public Module {
+class VentilationController : public Module, NetworkModule {
 public:
 	VentilationController();
 	virtual ~VentilationController();
@@ -37,6 +37,9 @@ public:
 
 	bool isPowerOn() const;
 	void setPowerOn(bool powerOn = true);
+
+	void commandReceived(const char *command, const char *payload);
+	void getTelemetryData(char *targetBuffer);
 
 private:
 	static const uint8_t MOTOR_COUNT = 8;

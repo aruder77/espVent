@@ -26,6 +26,10 @@ VentilationController::VentilationController() {
 
 	setPowerOn(true);
 	setSpeed(20);
+
+	networkControl->subscribeToCommand("speed", this);
+	networkControl->subscribeToCommand("mode", this);
+	networkControl->subscribeToCommand("direction", this);
 }
 
 VentilationController::~VentilationController() {
@@ -59,17 +63,17 @@ void VentilationController::every100Milliseconds() {
 	if (speed != speedLast) {
 		char speedStr[5];
 		snprintf(speedStr, 5, "%d", speed);
-		networkControl->send("speed", speedStr);
+		networkControl->sendStat("speed", speedStr);
 		speedLast = speed;
 	}
 	if (mode != modeLast) {
 		char modeStr[5];
 		snprintf(modeStr, 5, "%d", mode);
-		networkControl->send("mode", modeStr);
+		networkControl->sendStat("mode", modeStr);
 		modeLast = mode;
 	}
 	if (direction != directionLast) {
-		networkControl->send("direction", direction ? "true" : "false");
+		networkControl->sendStat("direction", direction ? "true" : "false");
 		directionLast = direction; 
 	}
 	for (int i = 0; i < MOTOR_COUNT; i++) {
@@ -79,7 +83,7 @@ void VentilationController::every100Milliseconds() {
 			snprintf(networkStr, sizeof(networkStr), "motors/%d/speed", i);
 			char speedStr[5];
 			snprintf(speedStr, sizeof(speedStr), "%d", currentSpeed);
-			networkControl->send(networkStr, speedStr);
+			networkControl->sendStat(networkStr, speedStr);
 			motorSpeedLast[i] = currentSpeed;
 		}
 		uint8_t currentPwm = motors[i]->getCurrentPwmValue();
@@ -88,14 +92,14 @@ void VentilationController::every100Milliseconds() {
 			snprintf(topicStr, sizeof(topicStr), "motors/%d/pwm", i);
 			char currentPwmStr[5];
 			snprintf(currentPwmStr, sizeof(currentPwmStr), "%d", currentPwm);
-			networkControl->send(topicStr, currentPwmStr);
+			networkControl->sendStat(topicStr, currentPwmStr);
 			motorPwmLast[i] = currentPwm;
 		}
 		bool currentDirection = motors[i]->isTargetDirection();
 		if (motorDirectionLast[i] != currentDirection) {
 			char topicStr[100];
 			snprintf(topicStr, sizeof(topicStr), "motors/%d/flowDirection", i);			
-			networkControl->send(topicStr, currentDirection ? "in" : "out");
+			networkControl->sendStat(topicStr, currentDirection ? "in" : "out");
 			motorDirectionLast[i] = currentDirection;
 		}
 	}
@@ -173,4 +177,25 @@ void VentilationController::setPowerPin(bool powerOn) {
 	char logBuffer[20];
 	snprintf(logBuffer, sizeof(logBuffer), "Power: %s", powerOn ? "true" : "false");
 	Log.notice(logBuffer);
+}
+
+void VentilationController::commandReceived(const char *command, const char *payload) {
+	Log.notice("received command %s", command);
+	if (strcmp(command, "speed") == 0) {
+		setSpeed(atoi(payload));
+	} else if (strcmp(command, "mode") == 0) {
+		setMode(atoi(payload));
+	} else if (strcmp(command, "direction") == 0) {
+		setDirection(strcmp(payload, "true"));
+	} else if (strncasecmp(command, "motors/", 7)) {
+		char motorNumberStr[2];
+		substr(command, 7, 1, motorNumberStr);
+		int motorNumber = atoi(motorNumberStr);
+		if (strncmp("speed", command, strlen("speed")) == 0) {
+			setSpeed(motorNumber, atoi(payload));
+		}
+ 	}
+}
+
+void VentilationController::getTelemetryData(char *targetBuffer) {
 }
