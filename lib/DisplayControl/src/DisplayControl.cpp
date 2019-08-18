@@ -40,22 +40,28 @@ void DisplayControl::setup() {
   tft.fillScreen(TFT_BLACK);
 
   tft.setTextColor(TFT_WHITE, TFT_BLACK); // Note: the new fonts do not draw the background colour
-  tft.drawString("Heatmaster 1.0", 0, 0, 2);
+  tft.drawString("EspVent 1.0", 0, 0, 2);
   tft.drawRightString("IP: 192.168.178.45", 320, 0, 2);
 
-  tft.drawCentreString("Valve: 25 %", 160, 120 - tft.fontHeight(4) - 5, 4);
-  tft.drawCentreString("Pump: ON", 160, 120 + 5, 4);
+  tft.drawCentreString("Mode: 1", 160, 120 - tft.fontHeight(4) - 5, 4);
+  tft.drawCentreString("", 160, 120 + 5, 4);
 
-  tft.drawString("AF: 17.0° C", 0, 240 - tft.fontHeight(2), 2);
-  tft.drawCentreString("VF: 39.0° C", 160, 240 - tft.fontHeight(2), 2);
-  tft.drawRightString("RueF: 56.0° C", 320, 240 - tft.fontHeight(2), 2);
+  tft.drawString("WZ 80% IN", 0, 80 - tft.fontHeight(2), 2);
+  tft.drawString("EZ 60% OUT", 0, 120 - tft.fontHeight(2), 2);
+  tft.drawString("SZ 40% IN", 0, 160 - tft.fontHeight(2), 2);
+  tft.drawString("FL 30% OUT", 0, 200 - tft.fontHeight(2), 2);
+
+  tft.drawRightString("K1 50% IN", 320, 240 - tft.fontHeight(2), 2);
+  tft.drawRightString("K2 60% OUT", 320, 240 - tft.fontHeight(2), 2);
+  tft.drawRightString("7 20% IN", 320, 240 - tft.fontHeight(2), 2);
+  tft.drawRightString("8 30% OUT", 320, 240 - tft.fontHeight(2), 2);
 
   //tft.drawCentreString("Updating firmware...", 160, 160, 2);
   //tft.drawRect(0, 180, 320, 10, TFT_WHITE);
 
   tft.setTextColor(TFT_RED, TFT_BLACK); // Note: the new fonts do not draw the background colour
   tft.drawCentreString("Configuration Mode", 160, 160, 2);
-  tft.drawCentreString("SSID: heatmaster, http://192.168.4.1", 160, 180, 2);
+  tft.drawCentreString("SSID: espVent, http://192.168.4.1", 160, 180, 2);
 }
 
 const char *DisplayControl::getName() {

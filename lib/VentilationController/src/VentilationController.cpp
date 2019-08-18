@@ -12,14 +12,14 @@ VentilationController::VentilationController() {
 	prefs = Prefs::getInstance();
 
 	// initialize motors
-	motors[0] = new MotorController(32, 1, false);		// Flur EG
-	motors[1] = new MotorController(33, 2, true);		// Wohnzimmer EG
-	motors[2] = new MotorController(25, 3, false);		// Schlafzimmer
-	motors[3] = new MotorController(26, 4, true);		// Flur OG
-	motors[4] = new MotorController(27, 5, false);		// Kind 1
-	motors[5] = new MotorController(14, 6, true);		// Kind 2
-	motors[6] = new MotorController(12, 7, false);
-	motors[7] = new MotorController(13, 8, true);
+	motors[0] = new MotorController(13, 1, false);		// Flur EG
+	motors[1] = new MotorController(12, 2, true);		// Wohnzimmer EG
+	motors[2] = new MotorController(14, 3, false);		// Schlafzimmer
+	motors[3] = new MotorController(27, 4, true);		// Flur OG
+	motors[4] = new MotorController(26, 5, false);		// Kind 1
+	motors[5] = new MotorController(25, 6, true);		// Kind 2
+	motors[6] = new MotorController(33, 7, false);
+	motors[7] = new MotorController(32, 8, true);
 
 	// calculate directionChangeLoops
 	directionChangeLoopCount = DIRECTION_CHANGE_INTERVAL * 1000.0 / 100;
@@ -30,6 +30,7 @@ VentilationController::VentilationController() {
 	networkControl->subscribeToCommand("speed", this);
 	networkControl->subscribeToCommand("mode", this);
 	networkControl->subscribeToCommand("direction", this);
+	networkControl->subscribeToCommand("motors/", this);
 }
 
 VentilationController::~VentilationController() {
@@ -44,7 +45,7 @@ void VentilationController::every100Milliseconds() {
 	if (loopCounter == directionChangeLoopCount) {
 		// only in mode 0, change direction
 		if (mode == 0) {
-			Log.notice("changing direction...");
+			Log.notice("changing direction...\n");
 			this->setDirection(!this->isDirection());
 		}
 		loopCounter = 0;
@@ -95,7 +96,7 @@ void VentilationController::every100Milliseconds() {
 			networkControl->sendStat(topicStr, currentPwmStr);
 			motorPwmLast[i] = currentPwm;
 		}
-		bool currentDirection = motors[i]->isTargetDirection();
+		bool currentDirection = motors[i]->isFlowDirectionIn();
 		if (motorDirectionLast[i] != currentDirection) {
 			char topicStr[100];
 			snprintf(topicStr, sizeof(topicStr), "motors/%d/flowDirection", i);			
@@ -124,7 +125,7 @@ int VentilationController::getMode() const {
 
 void VentilationController::setMode(int mode) {
 	char logBuffer[50];
-	snprintf(logBuffer, sizeof(logBuffer), "Mode: %d", mode);
+	snprintf(logBuffer, sizeof(logBuffer), "Mode: %d\n", mode);
 	Log.notice(logBuffer);
 	this->mode = mode;
 }
@@ -175,23 +176,32 @@ void VentilationController::setPowerPin(bool powerOn) {
 		digitalWrite(POWER_PIN, LOW);
 	}
 	char logBuffer[20];
-	snprintf(logBuffer, sizeof(logBuffer), "Power: %s", powerOn ? "true" : "false");
+	snprintf(logBuffer, sizeof(logBuffer), "Power: %s\n", powerOn ? "true" : "false");
 	Log.notice(logBuffer);
 }
 
+char* VentilationController::substr(const char *buff, uint8_t start,uint8_t len, char* substr)
+{
+    strncpy(substr, buff+start, len);
+    substr[len] = 0;
+    return substr;
+}
+
 void VentilationController::commandReceived(const char *command, const char *payload) {
-	Log.notice("received command %s", command);
+	Log.notice("received command %s\n", command);
 	if (strcmp(command, "speed") == 0) {
 		setSpeed(atoi(payload));
 	} else if (strcmp(command, "mode") == 0) {
 		setMode(atoi(payload));
 	} else if (strcmp(command, "direction") == 0) {
 		setDirection(strcmp(payload, "true"));
-	} else if (strncasecmp(command, "motors/", 7)) {
+	} else if (strncmp(command, "motors/", 7) == 0) {
+		Log.notice("motors command\n");
 		char motorNumberStr[2];
 		substr(command, 7, 1, motorNumberStr);
 		int motorNumber = atoi(motorNumberStr);
-		if (strncmp("speed", command, strlen("speed")) == 0) {
+		Log.notice("command+9: %s\n", command + 9);
+		if (strncmp("speed", command + 9, strlen("speed")) == 0) {
 			setSpeed(motorNumber, atoi(payload));
 		}
  	}

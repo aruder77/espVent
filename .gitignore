@@ -38,3 +38,4 @@
 .vscode/launch.json
 .vscode/ipch/
 
+otaServer/data/firmware.bin

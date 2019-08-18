@@ -74,6 +74,8 @@ private:
 	MotorController* motors[MOTOR_COUNT];
 
 	void setPowerPin(bool powerOn);
+
+	char* substr(const char *buff, uint8_t start,uint8_t len, char* substr);
 };
 
 #endif /* VENTILATIONCONTROL_H_ */

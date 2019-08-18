@@ -38,7 +38,7 @@ public:
 	void adjust();
 
 private:
-	static const int DECREASE_PWM = 3;
+	static const int DECREASE_PWM = 1;
 	static const uint8_t MAX_SPEED = 77;
 	static const uint8_t MIN_SPEED = 10;
 

@@ -54,9 +54,9 @@ void MotorController::setTargetSpeed(uint8_t targetSpeed) {
 	this->targetPwmSignal = convertToPwmSignal(this->targetDirection, targetSpeed);
 	char speedLog[20];
 	char targetPwmLog[25];
-	snprintf(speedLog, sizeof(speedLog), "new speed: %d", targetSpeed);
+	snprintf(speedLog, sizeof(speedLog), "new speed: %d\n", targetSpeed);
 	Log.notice(speedLog);
-	snprintf(targetPwmLog, sizeof(targetPwmLog), "new target pwm: %d", this->targetPwmSignal);
+	snprintf(targetPwmLog, sizeof(targetPwmLog), "new target pwm: %d\n", this->targetPwmSignal);
 	Log.notice(targetPwmLog);
 }
 
@@ -75,9 +75,9 @@ bool MotorController::isTargetDirection() const {
 void MotorController::setTargetDirection(bool targetDirection) {
 	this->targetDirection = targetDirection;
 	this->targetPwmSignal = convertToPwmSignal(targetDirection, this->targetSpeed);
-	Log.notice("changing direction");
+	Log.notice("changing direction\n");
 	char targetPwmLog[25];
-	snprintf(targetPwmLog, sizeof(targetPwmLog), "new target pwm: %d", this->targetPwmSignal);
+	snprintf(targetPwmLog, sizeof(targetPwmLog), "new target pwm: %d\n", this->targetPwmSignal);
 	Log.notice(targetPwmLog);
 }
 
@@ -136,7 +136,7 @@ uint8_t MotorController::convertToSpeed(uint8_t pwmSignal) {
 void MotorController::setCurrentPwmSignal(uint8_t currentPwmSignal) {
 	this->currentPwmSignal = currentPwmSignal;
 	char targetPwmLog[25];
-	snprintf(targetPwmLog, sizeof(targetPwmLog), " new current pwm: %d", this->currentPwmSignal);
+	snprintf(targetPwmLog, sizeof(targetPwmLog), " new current pwm: %d\n", this->currentPwmSignal);
 	Log.notice(targetPwmLog);
 	ledcWrite(pwmChannel, this->currentPwmSignal);
 }
