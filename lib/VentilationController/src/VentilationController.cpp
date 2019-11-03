@@ -12,8 +12,8 @@ VentilationController::VentilationController() {
 	prefs = Prefs::getInstance();
 
 	// initialize motors
-	motors[0] = new MotorController(13, 1, false);		// Flur EG
-	motors[1] = new MotorController(12, 2, true);		// Wohnzimmer EG
+	motors[0] = new MotorController(4 , 1, false);		// Flur EG
+	motors[1] = new MotorController(13, 2, true);		// Wohnzimmer EG
 	motors[2] = new MotorController(14, 3, false);		// Schlafzimmer
 	motors[3] = new MotorController(27, 4, true);		// Flur OG
 	motors[4] = new MotorController(26, 5, false);		// Kind 1
