@@ -7,6 +7,9 @@
 
 #include "MotorController.h"
 
+
+
+
 MotorController::MotorController(uint8_t pwmPin, uint8_t pwmChannel, bool inverseDirection) : pwmPin(pwmPin), pwmChannel(pwmChannel), inverseDirection(inverseDirection) {
 	// initialize digital pin LED_BUILTIN as an output.
 	pinMode(pwmPin, OUTPUT);
@@ -20,19 +23,37 @@ MotorController::~MotorController() {
 }
 
 
+uint8_t MotorController::decreaseValue(uint8_t currentValue) {
+	int i = 126;
+	while (curve[i] > currentValue || i == 0) {
+		i--;
+	}
+	return curve[i];
+}
+
+uint8_t MotorController::increaseValue(uint8_t currentValue) {
+	int i = 0;
+	while (curve[i] < currentValue || i == 126) {
+		i++;
+	}
+	return curve[i];
+
+}
+
+
 void MotorController::adjust() {
 	if (this->targetPwmSignal > this->currentPwmSignal) {
-		if (this->targetPwmSignal - this->currentPwmSignal >= DECREASE_PWM) {
-			setCurrentPwmSignal(currentPwmSignal + DECREASE_PWM);
-		} else {
-			setCurrentPwmSignal(this->targetPwmSignal);
-		}
+		uint8_t newValue = decreaseValue(this->currentPwmSignal);
+		if (newValue < this->currentPwmSignal) {
+			newValue = this->targetPwmSignal;
+		} 
+		setCurrentPwmSignal(newValue);
 	} else if (this->targetPwmSignal < this->currentPwmSignal) {
-		if ((this->currentPwmSignal - this->targetPwmSignal) >= DECREASE_PWM) {
-			setCurrentPwmSignal(currentPwmSignal - DECREASE_PWM);
-		} else {
-			setCurrentPwmSignal(this->targetPwmSignal);
+		uint8_t newValue = increaseValue(this->currentPwmSignal);
+		if (newValue > this->currentPwmSignal) {
+			newValue = this->targetPwmSignal;
 		}
+		setCurrentPwmSignal(newValue);
 	}
 }
 
