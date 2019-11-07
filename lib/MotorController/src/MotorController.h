@@ -39,11 +39,12 @@ public:
 
 private:
 	static const int DECREASE_PWM = 1;
-	static const uint8_t MAX_SPEED = 77;
-	static const uint8_t MIN_SPEED = 10;
+	static const uint8_t MAX_PWM = 220;
+	static const uint8_t MIN_PWM = 30;
+	static const uint8_t PWM_RANGE = (MAX_PWM - MIN_PWM) / 2;
 
-	const uint8_t curve[126] { 225,223,222,222,222,221,220,219,217,214,209,205,201,196,191,187,183,179,175,171,168,166,163,161,160,158,156,155,153,152,151,149,148,146,145,144,143,142,141,140,139,139,138,138,137,137,136,135,134,134,133,132,132,131,130,130,129,129,128,127,126,126,125,124,123,123,122,122,121,120,119,119,118,118,117,116,116,115,115,114,113,113,112,111,110,110,109,108,107,106,106,105,104,103,102,101,99,98,97,95,94,92,89,87,83,79,76,72,68,64,60,56,52,48,43,37,31,24,18,12,7,4,2,1,0,0 };
 
+	const uint8_t curve[126] { 255,253,253,252,252,252,251,249,247,243,238,233,228,223,218,213,208,203,199,195,192,189,186,184,181,179,177,176,174,173,172,170,168,167,165,164,162,161,160,159,158,158,157,157,156,156,155,154,153,152,151,150,150,149,148,148,147,146,145,145,144,143,142,141,140,140,139,138,138,137,136,135,134,134,133,133,132,131,130,130,129,128,127,127,126,125,124,123,122,121,120,119,118,117,116,114,113,112,110,108,107,105,101,98,95,90,86,82,77,73,69,64,59,54,48,42,36,28,20,14,8,4,2,1,0,0 };
 	
 
 	uint8_t pwmPin;
@@ -56,6 +57,8 @@ private:
 	uint8_t currentPwmSignal = 128;
 	uint8_t targetPwmSignal = 0;
 
+	uint8_t currentIndex = 0;
+
 	void setCurrentPwmSignal(uint8_t currentPwmSignal);
 
 	uint8_t convertToPwmSignal(bool direction, uint8_t speed);
@@ -64,6 +67,7 @@ private:
 
 	uint8_t decreaseValue(uint8_t currentValue);
 	uint8_t increaseValue(uint8_t currentValue);
+	void setStartIndex(uint8_t currentValue);
 };
 
 #endif /* MOTORCONTROL_H_ */

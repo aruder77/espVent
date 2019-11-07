@@ -22,35 +22,25 @@ MotorController::MotorController(uint8_t pwmPin, uint8_t pwmChannel, bool invers
 MotorController::~MotorController() {
 }
 
-
-uint8_t MotorController::decreaseValue(uint8_t currentValue) {
-	int i = 126;
-	while (curve[i] > currentValue || i == 0) {
-		i--;
-	}
-	return curve[i];
-}
-
-uint8_t MotorController::increaseValue(uint8_t currentValue) {
+void MotorController::setStartIndex(uint8_t currentValue) {
 	int i = 0;
-	while (curve[i] < currentValue || i == 126) {
+	while (curve[i] >= currentValue || i == 125) {
 		i++;
 	}
-	return curve[i];
-
+	currentIndex = i;
 }
 
 
 void MotorController::adjust() {
 	if (this->targetPwmSignal > this->currentPwmSignal) {
-		uint8_t newValue = decreaseValue(this->currentPwmSignal);
-		if (newValue < this->currentPwmSignal) {
+		uint8_t newValue = curve[currentIndex--];
+		if (newValue > this->targetPwmSignal) {
 			newValue = this->targetPwmSignal;
 		} 
 		setCurrentPwmSignal(newValue);
 	} else if (this->targetPwmSignal < this->currentPwmSignal) {
-		uint8_t newValue = increaseValue(this->currentPwmSignal);
-		if (newValue > this->currentPwmSignal) {
+		uint8_t newValue = curve[currentIndex++];
+		if (newValue < this->targetPwmSignal) {
 			newValue = this->targetPwmSignal;
 		}
 		setCurrentPwmSignal(newValue);
@@ -73,6 +63,7 @@ uint8_t MotorController::getTargetSpeed() const {
 void MotorController::setTargetSpeed(uint8_t targetSpeed) {
 	this->targetSpeed = targetSpeed;
 	this->targetPwmSignal = convertToPwmSignal(this->targetDirection, targetSpeed);
+	setStartIndex(this->currentPwmSignal);
 	char speedLog[20];
 	char targetPwmLog[25];
 	snprintf(speedLog, sizeof(speedLog), "new speed: %d\n", targetSpeed);
@@ -116,42 +107,20 @@ uint8_t MotorController::convertToPwmSignal(bool direction, uint8_t speed) {
 	if (inverseDirection) {
 		realDirection = !direction;
 	}
-	// calculate scaled speed (considering min and max speed) unless 0
-	float scaledSpeed = 0;
-	if (speed > 1) {
-		scaledSpeed = MIN_SPEED + speed * (MAX_SPEED - MIN_SPEED) / 100.0;
-	}
+
+	uint8_t pwmDiff = speed/100.0f * PWM_RANGE;
 
 	if (realDirection) {
-		pwmSpeed = (50 - (scaledSpeed / 2.0)) * 255.0 / 100.0;
+		pwmSpeed = 125 - pwmDiff;
 	} else {
-		pwmSpeed = (50 + (scaledSpeed / 2.0)) * 255.0 / 100.0;
+		pwmSpeed = 125 + pwmDiff;
 	}
 
-	// minimum
-	if (pwmSpeed < 30) {
-		pwmSpeed = 30;
-	}
-	// maximum
-	if (pwmSpeed >= 224) {
-		pwmSpeed = 255;
-	}
 	return pwmSpeed;
 }
 
 uint8_t MotorController::convertToSpeed(uint8_t pwmSignal) {
-	uint8_t scaledSpeed = 0;
-	if (isDirectionForward(pwmSignal)) {
-		scaledSpeed = 2.0 * ( 50 - pwmSignal * 100.0 / 255.0);
-	} else {
-		scaledSpeed = 2.0 * ( pwmSignal * 100.0 / 255.0 - 50);
-	}
-	// convert from scaled speed (considering min and max speed) to percent speed (0-100)
-	uint8_t speed = 0;
-	if (scaledSpeed > 1) {
-		speed = (scaledSpeed - MIN_SPEED) * 100.0 / (MAX_SPEED - MIN_SPEED);
-	}
-	return speed;
+	return abs(pwmSignal - 125) / PWM_RANGE * 100;
 }
 
 void MotorController::setCurrentPwmSignal(uint8_t currentPwmSignal) {
