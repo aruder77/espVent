@@ -178,9 +178,6 @@ Controller::Controller()
   Log.notice("Controller Prefs %d\n", prefs);
   ledController = LedController::getInstance();
 
-  // register prefs
-  prefs->registerConfigParam("ConfigPortalPin", "Config-Portal Pin", "15", 3, this);
-
   // short press -> reset
   // long press 10 sec -> complete reset
   // double press -> config mode
@@ -199,7 +196,6 @@ Controller::~Controller() {
 }
 
 void Controller::setup() {
-  enterConfigPortalPin = prefs->getInt("ConfigPortalPin");
   /* oneButton = new OneButton(enterConfigPortalPin, true);
   oneButton->setPressTicks(LONG_PRESS_TIME);
   oneButton->attachClick(click);

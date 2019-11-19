@@ -40,7 +40,7 @@ class LedController : public PrefsClient {
 
         Ticker ticker;
         Prefs *prefs = Prefs::getInstance();
-        uint8_t statusLedPin;
+        uint8_t statusLedPin = 2;
 
         static void toggle();
 };

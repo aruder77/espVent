@@ -29,10 +29,6 @@ LedController* LedController::getInstance()
 }
 
 LedController::LedController() {
-    prefs->registerConfigParam("StatusLedPin", "Status-LED Pin", "2", 3, this);
-
-    statusLedPin = prefs->getInt("StatusLedPin");
-
     //set led pin as output
     pinMode(statusLedPin, OUTPUT);
 }

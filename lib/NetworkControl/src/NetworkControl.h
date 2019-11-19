@@ -66,6 +66,8 @@ private:
 
 	int loop_counter = 0;
 	char mqtt_server[100] = {0};
+	char mqtt_user[100] = {0};
+	char mqtt_password[100] = {0};
 	char clientId[20] = {0};
 	static bool saveConfig;
 

@@ -57,11 +57,15 @@ NetworkControl::NetworkControl() {
 	// initialize prefs
 	prefs->registerConfigParam("clientId", "Client-ID", "espVent", 100, this);
 	prefs->registerConfigParam("wpaKey", "WPA-Key", "~CM3CDUx", 100, this);
-	prefs->registerConfigParam("mqtt-server", "MQTT-Server", "192.168.178.27", 100, this);
+	prefs->registerConfigParam("mqtt-server", "MQTT-Server", "mqttserver.local", 100, this);
+	prefs->registerConfigParam("mqtt-user", "MQTT User", "", 100, this);
+	prefs->registerConfigParam("mqtt-password", "MQTT Password", "", 100, this);
 
 	mqttClient->setCallback(callback);
 
 	prefs->get("mqtt-server", mqtt_server);
+	prefs->get("mqtt-user", mqtt_user);
+	prefs->get("mqtt-password", mqtt_password);
 	Log.notice("loaded mqtt-server from eeprom: %s\n", mqtt_server);
 	mqttClient->setServer(mqtt_server, 1883);
 
@@ -148,7 +152,7 @@ void NetworkControl::reconnect()
 	{
 		Log.notice("Attempting MQTT connection...\n");
 		// Attempt to connect
-		if (mqttClient->connect(clientId))	
+		if (mqttClient->connect(clientId, mqtt_user, mqtt_password))	
 		{
 			Log.notice("connected\n");
 			subscribeTopic(clientId);
