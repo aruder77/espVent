@@ -23,11 +23,11 @@ The EspVent Firmware is based on my generic firmware for the Esp32 [espGeneric](
 - clone this EspVent Git Repository to your computer
 - change into the espVent working directory 
 - execute
-``pio run --target upload´´
+```pio run --target upload```
 
 ### Usage
 
-## Initial configuration
+#### Initial configuration
 
 After successful upload, the esp will reboot and go into configuration portal mode. This is indicated by the flashing blue LED.
 In this mode, the microcontroller will span a new WiFi network 'espVent'. 
@@ -42,11 +42,11 @@ In this mode, the microcontroller will span a new WiFi network 'espVent'.
 - Enter your MQTT server settings in the next three fields: hostname/IP-address, username, password.
 - Click 'Save'
 
-This is it. Your device should reboot and connect to your WiFi and MQTT server. The blue LED should be on. On successful connect, the controller sends a hello message to MQTT topic tele/<clientId>/hello. The client id is 'espVent' or whatever you entered instead during initial configuration.
+This is it. Your device should reboot and connect to your WiFi and MQTT server. The blue LED should be on. On successful connect, the controller sends a hello message to MQTT topic `tele/<clientId>/hello`. The client id is 'espVent' or whatever you entered instead during initial configuration.
 
-## MQTT communication
+#### MQTT communication
 
-## Button usage
+#### Button usage
 
 Use the external button to trigger basic functions like
 
@@ -55,10 +55,12 @@ Use the external button to trigger basic functions like
 |long press (> 10 seconds)|reset controller to firmware defaults|
 
 
-### Over-the-air firmware updates
+#### Over-the-air firmware updates
 
 The firmware supports over-the-air updates. Just send the following command via MQTT:
+
 topic: `cmnd/<client-id>/ota`
+
 payload: `url:<url-to-firmware.bin>,md5:<md5-hash-of-firmware.bin`
 
 
@@ -89,21 +91,21 @@ For reference here is how the GPIO pins of the esp32 are used:
 * LED: 2
 * BUTTON: 15
 * FANS
-** FAN 1: 4
-** FAN 2: 13
-** FAN 3: 14
-** FAN 4: 27
-** FAN 5: 26
-** FAN 6: 25
-** FAN 7: 33
-** FAN 8: 32
+  * FAN 1: 4
+  * FAN 2: 13
+  * FAN 3: 14
+  * FAN 4: 27
+  * FAN 5: 26
+  * FAN 6: 25
+  * FAN 7: 33
+  * FAN 8: 32
 * TFT Display
-** CS: 23
-** RST: 22
-** DC: 21
-** MOSI: 19
-** SCLK: 18
-** BL: 5
-** MISO: 17
+  * CS: 23
+  * RST: 22
+  * DC: 21
+  * MOSI: 19
+  * SCLK: 18
+  * BL: 5
+  * MISO: 17
 
 
