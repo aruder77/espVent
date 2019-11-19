@@ -46,6 +46,21 @@ This is it. Your device should reboot and connect to your WiFi and MQTT server. 
 
 #### MQTT communication
 
+The communication with the espVent controller follows the following scheme:
+- `cmnd/<client-id>/` prefixes all commands which can be sent to the contoller
+- `config/<client-id>` prefixes configuration changes which can be sent to the controller
+- `tele/<client-id>` prefixes telemetric data which is sent by the controller in 10-second intervals
+- `state/<client-id>` prefixes state changes which are sent by the controller 
+
+The following commands are supported by the controller:
+
+| topic | description | example value |
+|-------|-------------|---------------|
+| cmnd/<client-id>/mode | The mode of the ventilation system. Supported values are 0 (changing directions), 1 (non-changing) and 2 (all fans blowing inside)| 1 |
+| cmnd/<client-id>/speed | The target speed for all fans in percent. | 75 |
+| cmnd/<client-id>/direction | If the direction should be inverted in mode 0 and 1. "true" or "false". | true |
+| cmnd/<client-id>/motors/<0-7>/speed | The target speed for the motor with the given number (0-7) in percent. Only in mode 0 for security reasons. | 85 |
+
 #### Button usage
 
 Use the external button to trigger basic functions like
