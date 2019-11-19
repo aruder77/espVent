@@ -44,6 +44,18 @@ In this mode, the microcontroller will span a new WiFi network 'espVent'.
 
 This is it. Your device should reboot and connect to your WiFi and MQTT server. The blue LED should be on. On successful connect, the controller sends a hello message to MQTT topic `tele/<clientId>/hello`. The client id is 'espVent' or whatever you entered instead during initial configuration.
 
+#### Ventilation modes
+
+The controller supports three different modes for the ventilation system. The first two modes are also supported by the original LIG Activar controller, the third mode is only supported by espVent.
+
+| Ventilation Mode | Description |
+|------------------|-------------|
+| 0                | Normal ventilation mode. The fans are blowing 75 seconds in one direction and then 75 seconds in the other direction. |
+| 1                | "hot summer mode". Half of the fans are always blowing in, the other half are always blowing out. |
+| 2                | All fans are blowing in. |
+
+Individual fan speed control is only supported in mode 0 for security reasons.
+
 #### MQTT communication
 
 The communication with the espVent controller follows the following scheme:
@@ -56,10 +68,22 @@ The following commands are supported by the controller:
 
 | topic | description | example value |
 |-------|-------------|---------------|
-| cmnd/<client-id>/mode | The mode of the ventilation system. Supported values are 0 (changing directions), 1 (non-changing) and 2 (all fans blowing inside)| 1 |
-| cmnd/<client-id>/speed | The target speed for all fans in percent. | 75 |
-| cmnd/<client-id>/direction | If the direction should be inverted in mode 0 and 1. "true" or "false". | true |
-| cmnd/<client-id>/motors/<0-7>/speed | The target speed for the motor with the given number (0-7) in percent. Only in mode 0 for security reasons. | 85 |
+| `cmnd/<client-id>/mode` | The mode of the ventilation system. Supported values are 0 (changing directions), 1 (non-changing) and 2 (all fans blowing inside)| 1 |
+| `cmnd/<client-id>/speed` | The target speed for all fans in percent. | 75 |
+| `cmnd/<client-id>/direction` | If the direction should be inverted in mode 0 and 1. "true" or "false". | true |
+| `cmnd/<client-id>/motors/<0-7>/speed` | The target speed for the motor with the given number (0-7) in percent. Only in mode 0 for security reasons. | 85 |
+
+After a command has been successfully received by the controller, the controller sends a status update of the form `state/<client-id>/...`.
+
+Additionally to the confirmation messages these state updates are also sent:
+
+| topic | description | example value |
+|-------|-------------|---------------|
+| `state/<client-id>/motors/<0-7>/flowDirection` | The current air flow direction of the respective fan. "in" or "out". | in |
+| `state/<client-id>/motors/<0-7>/pwm` | The pwm value which is sent to the fan motor. | 222 |
+
+Every 10 seconds, a telemetry message is sent to the topic `tele/<client-id>/status` with overall status information in json format.
+
 
 #### Button usage
 
