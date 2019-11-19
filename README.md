@@ -50,8 +50,10 @@ This is it. Your device should reboot and connect to your WiFi and MQTT server. 
 
 Use the external button to trigger basic functions like
 
-|single press|enter configuration portal|
-|double press|reset(reboot) controller  |
+|button press             |result                               |
+|-------------------------|-------------------------------------|
+|single press             |enter configuration portal           |
+|double press             |reset(reboot) controller             |
 |long press (> 10 seconds)|reset controller to firmware defaults|
 
 
