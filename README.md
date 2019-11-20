@@ -126,7 +126,8 @@ The hardware consists of
 * one power-distribution- and fan-connector-board
   ![alt text](https://github.com/aruder77/espVent/raw/master/images/connectors.jpeg "Connectors board")
 
-* a controller board which sits on top and holds the NodeMCU Esp32 microcontroller board. It also has a connector for a button and the display.
+* and a controller board which sits on top and holds the NodeMCU Esp32 microcontroller board. It also has a connector for a button and a display.
+
   ![alt text](https://github.com/aruder77/espVent/raw/master/images/espBoard.jpeg "Controller board")
 
 
