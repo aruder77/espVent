@@ -161,3 +161,47 @@ For reference here is how the GPIO pins of the esp32 are used:
   * MISO: 17
 
 
+## Contributing
+
+### Bug Reports & Feature Requests
+
+Please use the [issue tracker](https://github.com/aruder77/espVent/issues) to report any bugs or file feature requests.
+
+### Developing
+
+PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
+
+ 1. **Fork** the repo on GitHub
+ 2. **Clone** the project to your own machine
+ 3. **Commit** changes to your own branch
+ 4. **Push** your work back up to your fork
+ 5. Submit a **Pull Request** so that we can review your changes
+
+**NOTE:** Be sure to merge the latest changes from "upstream" before making a pull request!
+
+
+## Copyright
+
+Copyright © 2019 Axel Ruder
+
+
+
+## License 
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+GNU GENERAL PUBLIC LICENSE  
+Version 3, 29 June 2007
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
