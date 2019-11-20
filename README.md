@@ -124,7 +124,11 @@ The hardware is very simple since the only real component is the ESP32 nodeMCU b
 
 The hardware consists of 
 * one power-distribution- and fan-connector-board
+  ![alt text](https://github.com/aruder77/espVent/raw/master/images/connectors.jpeg "Connectors board")
+
 * a controller board which sits on top and holds the NodeMCU Esp32 microcontroller board. It also has a connector for a button and the display.
+  ![alt text](https://github.com/aruder77/espVent/raw/master/images/espBoard.jpeg "Controller board")
+
 
 You need a Esp32 NodeMCU Dev board like [this one](https://www.amazon.de/gp/product/B07PG923ZK?th=1). Make sure that the distance between the two pin rows is 22.86mm, otherwise the board will not fit into the connectors on the controller board.
 
