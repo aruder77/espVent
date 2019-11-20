@@ -20,8 +20,14 @@ The EspVent Firmware is based on my generic firmware for the Esp32 [espGeneric](
 ### Installation instructions
 
 - download and install [PlatformIO](https://platformio.org) to your computer (PC, Mac, Linux supported)
-- clone this EspVent Git Repository to your computer
+- clone or download this EspVent Git Repository to your computer
 - change into the espVent working directory 
+- execute
+```pio run```
+- copy the file User_Setup.h to .pio/libdeps/TFT_eSPI_ID1559 (the last part may be different), overwriting the existing User_Setup.h. If you use a different SPI TFT display, adopt this file according to your display.
+- connect your esp32 board via USB and execute 
+```pio device list``` to list the USB serial ports
+- find the USB serial port device for your board and adopt the monitor_port and upload_port setting in platformio.ini accordingly
 - execute
 ```pio run --target upload```
 
@@ -87,6 +93,8 @@ Every 10 seconds, a telemetry message is sent to the topic `tele/<client-id>/sta
 
 #### Button usage
 
+**Unfortunately the button does not work currently since the gpio port 15 is somehow used by something else.**
+
 Use the external button to trigger basic functions like
 
 |button press             |result                               |
@@ -104,6 +112,9 @@ topic: `cmnd/<client-id>/ota`
 
 payload: `url:<url-to-firmware.bin>,md5:<md5-hash-of-firmware.bin`
 
+The easiest way to send the ota command is via a mqtt command line tool, such as mosquitto_pub and mosquitto_sub:
+
+`mosquitto_pub -h mqtt-server.local -t cmnd/espVent/ota -m "url:http://192.168.178.20:8080/firmware.bin,md5:xy"`
 
 ## EspVent Hardware
 
