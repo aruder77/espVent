@@ -120,7 +120,7 @@ The easiest way to send the ota command is via a mqtt command line tool, such as
 
 The hardware is very simple since the only real component is the ESP32 nodeMCU board. Everything else is just connectors and power distribution. The L7805CV provides the 5V for the ESP since the input voltage is 12V DC.
 
-!(https://github.com/aruder77/espVent/raw/master/images/assembled.jpeg)
+![alt text](https://github.com/aruder77/espVent/raw/master/images/assembled.jpeg "Assembled Controller")
 
 The hardware consists of 
 * one power-distribution- and fan-connector-board
