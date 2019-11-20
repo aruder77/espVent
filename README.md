@@ -118,11 +118,15 @@ The easiest way to send the ota command is via a mqtt command line tool, such as
 
 ## EspVent Hardware
 
-The DIY hardware consists of 
-* one power-distribution- and fan-connector-board
-* one controller board which holds the NodeMCU Esp32 microcontroller board
+The hardware is very simple since the only real component is the ESP32 nodeMCU board. Everything else is just connectors and power distribution. The L7805CV provides the 5V for the ESP since the input voltage is 12V DC.
 
-Additionally, you need a Esp32 NodeMCU Dev board like [this one](https://www.amazon.de/gp/product/B07PG923ZK?th=1). Make sure that the distance between the two pin rows is 22.86mm, otherwise the board will not fit into the connectors on the controller board.
+!(https://github.com/aruder77/espVent/raw/master/images/assembled.jpeg)
+
+The hardware consists of 
+* one power-distribution- and fan-connector-board
+* a controller board which sits on top and holds the NodeMCU Esp32 microcontroller board. It also has a connector for a button and the display.
+
+You need a Esp32 NodeMCU Dev board like [this one](https://www.amazon.de/gp/product/B07PG923ZK?th=1). Make sure that the distance between the two pin rows is 22.86mm, otherwise the board will not fit into the connectors on the controller board.
 
 The other two-pin connector on the controller board may be used to add a button for things like reset, enter config mode, reset to defaults (see Button usage).
 
