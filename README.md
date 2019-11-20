@@ -142,7 +142,7 @@ Optionally, you can add a 2.8" SPI TFT display like [this one](https://www.amazo
 
 The boards have been designed using EasyEDA, the sources are available at https://easyeda.com/axel.ruder/espvent. Feel free to clone and modify.
 
-You can also find the Gerber files for the two boards so that you can order the PCBs online and PDFs if you want to etch the boards yourself in the download area.
+You can also find the Gerber files for the two boards so that you can order the PCBs online and PDFs if you want to etch the boards yourself in the pcb folder.
 
 
 ### GPIO pin usage
