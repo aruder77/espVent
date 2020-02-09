@@ -116,7 +116,7 @@ class Controller : public NetworkModule, public PrefsClient {
         char md5_check[50];
         SysState state = Runnning_e;
 
-        uint8_t enterConfigPortalPin = 15;
+        uint8_t enterConfigPortalPin = 16;
 
         long timer = 0;
         int loopCounter = 0;

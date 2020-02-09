@@ -150,7 +150,7 @@ You can also find the Gerber files for the two boards so that you can order the 
 For reference here is how the GPIO pins of the esp32 are used:
 
 * LED: 2
-* BUTTON: 15
+* BUTTON: 16 (15/16/34/35/36/39 possible)
 * FANS
   * FAN 1: 4
   * FAN 2: 13

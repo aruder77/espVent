@@ -178,9 +178,9 @@ Controller::Controller()
   Log.notice("Controller Prefs %d\n", prefs);
   ledController = LedController::getInstance();
 
-  // short press -> reset
-  // long press 10 sec -> complete reset
-  // double press -> config mode
+  // short press -> config mode
+  // long press 10 sec -> complete reset and delete configuration
+  // double press -> reset
 
   // create all modules 
   networkControl = NetworkControl::getInstance();
@@ -196,11 +196,11 @@ Controller::~Controller() {
 }
 
 void Controller::setup() {
-  /* oneButton = new OneButton(enterConfigPortalPin, true);
+  oneButton = new OneButton(enterConfigPortalPin, true);
   oneButton->setPressTicks(LONG_PRESS_TIME);
   oneButton->attachClick(click);
   oneButton->attachDoubleClick(doubleClick);
-  oneButton->attachLongPressStop(longPressed);*/
+  oneButton->attachLongPressStop(longPressed);
   
   networkControl->subscribeToCommand(OTA_TOPIC, this);
 
@@ -219,7 +219,7 @@ void Controller::loop()
 {
   unsigned long currentMillis = millis();
 
-  //oneButton->tick();
+  oneButton->tick();
 
   switch (state)
   {
