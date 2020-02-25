@@ -1,5 +1,0 @@
-{
-  "name": "LedController",
-  "frameworks": "arduino",
-  "platforms": "espressif32"
-}

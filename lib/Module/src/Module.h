@@ -16,7 +16,8 @@
 #ifndef MODULE_H_
 #define MODULE_H_
 
-#include <Prefs.h>
+#include <stdio.h>
+
 
 class Module {
 
@@ -29,9 +30,6 @@ class Module {
         virtual void every50Milliseconds();
         virtual void every100Milliseconds();
         virtual void everySecond();
-        virtual void messageReceived(const char *topic, const char *payload);
-        virtual void getTelemetryData(char *targetBuffer);
-        virtual void configUpdate(const char *id, const char *value);
 
 };
 

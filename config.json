@@ -1,0 +1,24 @@
+{
+    "name": "Esp32Generic",
+    "device_id": "esp32Generic",
+    "device_stats_interval": 60,
+    "wifi": {
+      "ssid": "ALOHA",
+      "password": "4805793211109982"
+    },
+    "mqtt": {
+      "host": "192.168.178.27",
+      "port": 1883,
+      "base_topic": "devices/",
+      "auth": true,
+      "username": "mqttAccess",
+      "password": "w62D?F[m",
+      "ssl": false
+    },
+    "ota": {
+      "enabled": true
+    },
+    "settings": {
+      "percentage": 55
+    }
+  }

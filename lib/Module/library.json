@@ -1,0 +1,6 @@
+{
+    "name": "Module",
+    "frameworks": "arduino",
+    "platforms": "espressif32"
+  }
+  
