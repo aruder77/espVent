@@ -39,3 +39,6 @@
 .vscode/ipch/
 
 otaServer/data/firmware.bin
+.vscode/extensions.json
+otaServer/.DS_Store
+.DS_Store
