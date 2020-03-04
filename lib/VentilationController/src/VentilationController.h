@@ -8,17 +8,16 @@
 #ifndef VENTILATIONCONTROLLER_H_
 #define VENTILATIONCONTROLLER_H_
 
-#include <NetworkControl.h>
 #include <MotorController.h>
 #include <Arduino.h>
-#include <ArduinoLog.h>
 #include <Module.h>
+#include <Homie.h>
 
 #define MOTOR_NUMBER = 2
 
-class VentilationController : public Module, NetworkModule {
+class VentilationController : public Module {
 public:
-	VentilationController();
+	static VentilationController* getInstance(); 	
 	virtual ~VentilationController();
 
 	virtual const char *getName();
@@ -27,6 +26,7 @@ public:
 
 	bool isDirection() const;
 	void setDirection(bool direction = true);
+	void setDirection(uint8_t motorNumber, bool direction = true);
 
 	int getMode() const;
 	void setMode(int mode = 0);
@@ -50,6 +50,12 @@ private:
 	// time interval between direction changes in mode 0 in seconds
 	static const int DIRECTION_CHANGE_INTERVAL = 75;
 
+	static VentilationController *instance;
+	VentilationController();
+
+	HomieNode *motorsNode;
+	HomieNode *motorNode[8];
+
 	bool powerOn = true;
 	uint8_t speed = 25;
 	int mode = 0;
@@ -69,8 +75,6 @@ private:
 	// keep last speed before powerOff
 	uint8_t speedBeforePowerOff = 25;
 
-	NetworkControl* networkControl;
-	Prefs* prefs;
 	MotorController* motors[MOTOR_COUNT];
 
 	void setPowerPin(bool powerOn);

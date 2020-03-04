@@ -1,5 +1,0 @@
-{
-  "name": "DisplayControl",
-  "frameworks": "arduino",
-  "platforms": "espressif32"
-}

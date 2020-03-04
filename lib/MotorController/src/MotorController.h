@@ -9,7 +9,6 @@
 #define MOTORCONTROLLER_H_
 
 #include <Arduino.h>
-#include <ArduinoLog.h>
 #include <Module.h>
 #include <esp32-hal-ledc.h>
 

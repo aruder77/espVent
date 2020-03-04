@@ -7,9 +7,244 @@
 
 #include "VentilationController.h"
 
+bool speedHandler(const HomieRange& range, const String& value) {
+	long intValue = value.toInt();
+	if (intValue < 0 || intValue > 100) {
+		return false;
+	}
+
+	VentilationController::getInstance()->setSpeed(intValue);
+  	return true;
+}
+
+bool modeHandler(const HomieRange& range, const String& value) {
+	long intValue = value.toInt();
+	if (intValue < 0 || intValue > 3) {
+		return false;
+	}
+
+	VentilationController::getInstance()->setMode(intValue);
+  	return true;
+}
+
+bool directionHandler(const HomieRange& range, const String& value) {
+	bool boolValue = value.equalsIgnoreCase("true");
+
+	VentilationController::getInstance()->setDirection(boolValue);
+  	return true;
+}
+
+bool setMotorSpeed(const uint8_t motorNumber, const String& value) {
+	long intValue = value.toInt();
+	if (intValue < 0 || intValue > 100) {
+		return false;
+	}
+
+	VentilationController::getInstance()->setSpeed(motorNumber, intValue);
+  	return true;
+}
+
+bool motorSpeedHandler0(const HomieRange& range, const String& value) {
+	return setMotorSpeed(0, value);
+}
+
+bool motorSpeedHandler1(const HomieRange& range, const String& value) {
+	return setMotorSpeed(1, value);
+}
+
+bool motorSpeedHandler2(const HomieRange& range, const String& value) {
+	return setMotorSpeed(2, value);
+}
+
+bool motorSpeedHandler3(const HomieRange& range, const String& value) {
+	return setMotorSpeed(3, value);
+}
+
+bool motorSpeedHandler4(const HomieRange& range, const String& value) {
+	return setMotorSpeed(4, value);
+}
+
+bool motorSpeedHandler5(const HomieRange& range, const String& value) {
+	return setMotorSpeed(5, value);
+}
+
+bool motorSpeedHandler6(const HomieRange& range, const String& value) {
+	return setMotorSpeed(6, value);
+}
+
+bool motorSpeedHandler7(const HomieRange& range, const String& value) {
+	return setMotorSpeed(7, value);
+}
+
+
+bool setMotorDirection(const uint8_t motorNumber, const String& value) {
+	bool boolValue = value.equalsIgnoreCase("true");
+
+	VentilationController::getInstance()->setDirection(motorNumber, boolValue);
+  	return true;
+}
+
+bool motorDirectionHandler0(const HomieRange& range, const String& value) {
+	return setMotorDirection(0, value);
+}
+
+bool motorDirectionHandler1(const HomieRange& range, const String& value) {
+	return setMotorDirection(1, value);
+}
+
+bool motorDirectionHandler2(const HomieRange& range, const String& value) {
+	return setMotorDirection(2, value);
+}
+
+bool motorDirectionHandler3(const HomieRange& range, const String& value) {
+	return setMotorDirection(3, value);
+}
+
+bool motorDirectionHandler4(const HomieRange& range, const String& value) {
+	return setMotorDirection(4, value);
+}
+
+bool motorDirectionHandler5(const HomieRange& range, const String& value) {
+	return setMotorDirection(5, value);
+}
+
+bool motorDirectionHandler6(const HomieRange& range, const String& value) {
+	return setMotorDirection(6, value);
+}
+
+bool motorDirectionHandler7(const HomieRange& range, const String& value) {
+	return setMotorDirection(7, value);
+}
+
+VentilationController *VentilationController::instance = 0;
+
+VentilationController *VentilationController::getInstance()
+{
+	// The only instance
+	// Guaranteed to be lazy initialized
+	// Guaranteed that it will be destroyed correctly
+	if (!VentilationController::instance)
+	{
+		VentilationController::instance = new VentilationController();
+	}
+	return VentilationController::instance;
+}
+
 VentilationController::VentilationController() {
-	networkControl = NetworkControl::getInstance();
-	prefs = Prefs::getInstance();
+	motorsNode = new HomieNode("motors", "Motors", "ventilation");
+	motorNode[0] = new HomieNode("motor0", "Motor 0", "ventilation");
+	motorNode[1] = new HomieNode("motor1", "Motor 1", "ventilation");
+	motorNode[2] = new HomieNode("motor2", "Motor 2", "ventilation");
+	motorNode[3] = new HomieNode("motor3", "Motor 3", "ventilation");
+	motorNode[4] = new HomieNode("motor4", "Motor 4", "ventilation");
+	motorNode[5] = new HomieNode("motor5", "Motor 5", "ventilation");
+	motorNode[6] = new HomieNode("motor6", "Motor 6", "ventilation");
+	motorNode[7] = new HomieNode("motor7", "Motor 7", "ventilation");
+
+
+	motorsNode->advertise("speed")
+			.setName("speed")
+			.setDatatype("integer")
+			.setUnit("%")
+			.settable(speedHandler);
+	motorsNode->advertise("mode")
+			.setName("mode")
+			.setDatatype("integer")
+			.setFormat("0:3")
+			.settable(modeHandler);
+	motorsNode->advertise("direction")
+			.setName("direction")
+			.setDatatype("enum")
+			.setFormat("in,out")
+			.settable(directionHandler);
+
+	motorNode[0]->advertise("speed")
+			.setName("speed")
+			.setDatatype("integer")
+			.setUnit("%")
+			.settable(motorSpeedHandler0);
+	motorNode[0]->advertise("direction")
+			.setName("direction")
+			.setDatatype("enum")
+			.setFormat("in,out")
+			.settable(motorDirectionHandler0);
+
+	motorNode[1]->advertise("speed")
+			.setName("speed")
+			.setDatatype("integer")
+			.setUnit("%")
+			.settable(motorSpeedHandler1);
+	motorNode[1]->advertise("direction")
+			.setName("direction")
+			.setDatatype("enum")
+			.setFormat("in,out")
+			.settable(motorDirectionHandler1);
+
+	motorNode[2]->advertise("speed")
+			.setName("speed")
+			.setDatatype("integer")
+			.setUnit("%")
+			.settable(motorSpeedHandler2);
+	motorNode[2]->advertise("direction")
+			.setName("direction")
+			.setDatatype("enum")
+			.setFormat("in,out")
+			.settable(motorDirectionHandler3);
+
+	motorNode[3]->advertise("speed")
+			.setName("speed")
+			.setDatatype("integer")
+			.setUnit("%")
+			.settable(motorSpeedHandler3);
+	motorNode[3]->advertise("direction")
+			.setName("direction")
+			.setDatatype("enum")
+			.setFormat("in,out")
+			.settable(motorDirectionHandler3);
+
+	motorNode[4]->advertise("speed")
+			.setName("speed")
+			.setDatatype("integer")
+			.setUnit("%")
+			.settable(motorSpeedHandler4);
+	motorNode[4]->advertise("direction")
+			.setName("direction")
+			.setDatatype("enum")
+			.setFormat("in,out")
+			.settable(motorDirectionHandler4);
+
+	motorNode[5]->advertise("speed")
+			.setName("speed")
+			.setDatatype("integer")
+			.setUnit("%")
+			.settable(motorSpeedHandler5);
+	motorNode[5]->advertise("direction")
+			.setName("direction")
+			.setDatatype("enum")
+			.setFormat("in,out")
+			.settable(motorDirectionHandler5);
+
+	motorNode[6]->advertise("speed")
+			.setName("speed")
+			.setDatatype("integer")
+			.setUnit("%")
+			.settable(motorSpeedHandler6);
+	motorNode[6]->advertise("direction")
+			.setName("direction")
+			.setDatatype("enum")
+			.setFormat("in,out")
+			.settable(motorDirectionHandler6);
+
+	motorNode[7]->advertise("speed")
+			.setName("speed")
+			.setDatatype("integer")
+			.setUnit("%")
+			.settable(motorSpeedHandler7);
+	motorNode[7]->advertise("direction")
+			.setName("direction")
+			.setDatatype("enum")
+			.setFormat("in,out")
+			.settable(motorDirectionHandler7);
 
 	// initialize motors
 	motors[0] = new MotorController(4 , 1, false);		// Flur EG
@@ -26,11 +261,6 @@ VentilationController::VentilationController() {
 
 	setPowerOn(true);
 	setSpeed(20);
-
-	networkControl->subscribeToCommand("speed", this);
-	networkControl->subscribeToCommand("mode", this);
-	networkControl->subscribeToCommand("direction", this);
-	networkControl->subscribeToCommand("motors/", this);
 }
 
 VentilationController::~VentilationController() {
@@ -45,7 +275,7 @@ void VentilationController::every100Milliseconds() {
 	if (loopCounter == directionChangeLoopCount) {
 		// only in mode 0, change direction
 		if (mode == 0) {
-			Log.notice("changing direction...\n");
+			Homie.getLogger() << "changing direction..." << endl;
 			this->setDirection(!this->isDirection());
 		}
 		loopCounter = 0;
@@ -56,55 +286,6 @@ void VentilationController::every100Milliseconds() {
 		motors[i]->adjust();
 	}
 
-	// send status updates to mqtt
-	if (powerOn != powerOnLast) {
-		networkControl->sendStat("powerOn", powerOn ? "true" : "false");
-		powerOnLast = powerOn;
-	}
-	if (speed != speedLast) {
-		char speedStr[5];
-		snprintf(speedStr, 5, "%d", speed);
-		networkControl->sendStat("speed", speedStr);
-		speedLast = speed;
-	}
-	if (mode != modeLast) {
-		char modeStr[5];
-		snprintf(modeStr, 5, "%d", mode);
-		networkControl->sendStat("mode", modeStr);
-		modeLast = mode;
-	}
-	if (direction != directionLast) {
-		networkControl->sendStat("direction", direction ? "true" : "false");
-		directionLast = direction; 
-	}
-	for (int i = 0; i < MOTOR_COUNT; i++) {
-		uint8_t currentSpeed = motors[i]->getTargetSpeed();
-		if (motorSpeedLast[i] != currentSpeed) {
-			char networkStr[100];
-			snprintf(networkStr, sizeof(networkStr), "motors/%d/speed", i);
-			char speedStr[5];
-			snprintf(speedStr, sizeof(speedStr), "%d", currentSpeed);
-			networkControl->sendStat(networkStr, speedStr);
-			motorSpeedLast[i] = currentSpeed;
-		}
-		uint8_t currentPwm = motors[i]->getCurrentPwmValue();
-		if (motorPwmLast[i] != currentPwm) {
-			char topicStr[100];
-			snprintf(topicStr, sizeof(topicStr), "motors/%d/pwm", i);
-			char currentPwmStr[5];
-			snprintf(currentPwmStr, sizeof(currentPwmStr), "%d", currentPwm);
-			networkControl->sendStat(topicStr, currentPwmStr);
-			motorPwmLast[i] = currentPwm;
-		}
-		bool currentDirection = motors[i]->isFlowDirectionIn();
-		if (motorDirectionLast[i] != currentDirection) {
-			char topicStr[100];
-			snprintf(topicStr, sizeof(topicStr), "motors/%d/flowDirection", i);			
-			networkControl->sendStat(topicStr, currentDirection ? "in" : "out");
-			motorDirectionLast[i] = currentDirection;
-		}
-	}
-
 	loopCounter++;
 }
 
@@ -113,9 +294,20 @@ bool VentilationController::isDirection() const {
 }
 
 void VentilationController::setDirection(bool direction) {
-	this->direction = direction;
-	for (int i = 0; i < MOTOR_COUNT; i++) {
-		motors[i]->setTargetDirection(direction);
+	if (mode != 0 && mode != 2) {
+		this->direction = direction;
+		motorsNode->setProperty("direction").send(String(direction));
+		for (int i = 0; i < MOTOR_COUNT; i++) {
+			motors[i]->setTargetDirection(direction);
+			motorNode[i]->setProperty("direction").send(motors[i]->isFlowDirectionIn() ? "in" : "out");
+		}
+	}
+}
+
+void VentilationController::setDirection(uint8_t motorNumber, bool direction) {
+	if (mode == 3) {
+		motors[motorNumber]->setTargetDirection(direction);
+		motorNode[motorNumber]->setProperty("direction").send(motors[motorNumber]->isFlowDirectionIn() ? "in" : "out");
 	}
 }
 
@@ -126,8 +318,9 @@ int VentilationController::getMode() const {
 void VentilationController::setMode(int mode) {
 	char logBuffer[50];
 	snprintf(logBuffer, sizeof(logBuffer), "Mode: %d\n", mode);
-	Log.notice(logBuffer);
+	Homie.getLogger() << logBuffer;
 	this->mode = mode;
+	motorsNode->setProperty("mode").send(String(mode));
 }
 
 uint8_t VentilationController::getSpeed() const {
@@ -138,12 +331,16 @@ void VentilationController::setSpeed(uint8_t speed) {
 	this->speed = speed;
 	for (int i = 0; i < MOTOR_COUNT; i++) {
 		motors[i]->setTargetSpeed(speed);
+		motorNode[i]->setProperty("speed").send(String(speed));
 	}
+
 	if (speed == 0) {
 		setPowerPin(false);
 	} else if (!this->powerOn) {
 		setPowerPin(true);
 	}
+	Homie.getLogger() << "Speed is " << speed << endl;
+	motorsNode->setProperty("speed").send(String(speed));
 }
 
 void VentilationController::setSpeed(uint8_t motorNumber, uint8_t speed) {
@@ -152,6 +349,7 @@ void VentilationController::setSpeed(uint8_t motorNumber, uint8_t speed) {
 		setSpeed(speed);
 	} else if (this->mode == 0) {
 		motors[motorNumber]->setTargetSpeed(speed);
+		motorNode[motorNumber]->setProperty("speed").send(String(speed));
 	}
 }
 
@@ -177,7 +375,7 @@ void VentilationController::setPowerPin(bool powerOn) {
 	}
 	char logBuffer[20];
 	snprintf(logBuffer, sizeof(logBuffer), "Power: %s\n", powerOn ? "true" : "false");
-	Log.notice(logBuffer);
+	Homie.getLogger() << logBuffer;
 }
 
 char* VentilationController::substr(const char *buff, uint8_t start,uint8_t len, char* substr)
@@ -187,25 +385,3 @@ char* VentilationController::substr(const char *buff, uint8_t start,uint8_t len,
     return substr;
 }
 
-void VentilationController::commandReceived(const char *command, const char *payload) {
-	Log.notice("received command %s\n", command);
-	if (strcmp(command, "speed") == 0) {
-		setSpeed(atoi(payload));
-	} else if (strcmp(command, "mode") == 0) {
-		setMode(atoi(payload));
-	} else if (strcmp(command, "direction") == 0) {
-		setDirection(strcmp(payload, "true"));
-	} else if (strncmp(command, "motors/", 7) == 0) {
-		Log.notice("motors command\n");
-		char motorNumberStr[2];
-		substr(command, 7, 1, motorNumberStr);
-		int motorNumber = atoi(motorNumberStr);
-		Log.notice("command+9: %s\n", command + 9);
-		if (strncmp("speed", command + 9, strlen("speed")) == 0) {
-			setSpeed(motorNumber, atoi(payload));
-		}
- 	}
-}
-
-void VentilationController::getTelemetryData(char *targetBuffer) {
-}

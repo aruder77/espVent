@@ -17,10 +17,9 @@
 #define CONTROLLER_H_
 
 #include <Arduino.h>
-#include <ArduinoLog.h>
-#include <DisplayControl.h>
 #include <Module.h>
 #include <Homie.h>
+#include <VentilationController.h>
 
 
 class Modules {
@@ -59,8 +58,6 @@ class Controller {
         static Controller *instance;
 
         Controller();
-
-        DisplayControl* displayControl;
 
         Modules modules;
 

@@ -1,6 +1,6 @@
 {
-    "name": "Esp32Generic",
-    "device_id": "esp32Generic",
+    "name": "EspVent",
+    "device_id": "espVent",
     "device_stats_interval": 60,
     "wifi": {
       "ssid": "ALOHA",
@@ -9,7 +9,7 @@
     "mqtt": {
       "host": "192.168.178.27",
       "port": 1883,
-      "base_topic": "devices/",
+      "base_topic": "homie/",
       "auth": true,
       "username": "mqttAccess",
       "password": "w62D?F[m",
