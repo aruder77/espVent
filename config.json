@@ -9,7 +9,7 @@
     "mqtt": {
       "host": "192.168.178.27",
       "port": 1883,
-      "base_topic": "homie/",
+      "base_topic": "devices/",
       "auth": true,
       "username": "mqttAccess",
       "password": "w62D?F[m",

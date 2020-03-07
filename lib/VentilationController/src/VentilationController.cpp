@@ -131,6 +131,7 @@ VentilationController *VentilationController::getInstance()
 }
 
 VentilationController::VentilationController() {
+	memNode = new HomieNode("memory", "Memory", "memory");
 	motorsNode = new HomieNode("motors", "Motors", "ventilation");
 	motorNode[0] = new HomieNode("motor0", "Motor 0", "ventilation");
 	motorNode[1] = new HomieNode("motor1", "Motor 1", "ventilation");
@@ -141,6 +142,9 @@ VentilationController::VentilationController() {
 	motorNode[6] = new HomieNode("motor6", "Motor 6", "ventilation");
 	motorNode[7] = new HomieNode("motor7", "Motor 7", "ventilation");
 
+	memNode->advertise("freeHeap")
+			.setName("free heap")
+			.setDatatype("integer");
 
 	motorsNode->advertise("speed")
 			.setName("speed")
@@ -277,6 +281,10 @@ void VentilationController::every100Milliseconds() {
 		if (mode == 0) {
 			Homie.getLogger() << "changing direction..." << endl;
 			this->setDirection(!this->isDirection());
+
+			// publish free memory
+			memNode->setProperty("freeHeap").send(String(ESP.getFreeHeap()));
+			Homie.getLogger() << "free heap: " << ESP.getFreeHeap() << endl;
 		}
 		loopCounter = 0;
 	}

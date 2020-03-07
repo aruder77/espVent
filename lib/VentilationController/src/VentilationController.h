@@ -53,6 +53,8 @@ private:
 	static VentilationController *instance;
 	VentilationController();
 
+	HomieNode *memNode;
+
 	HomieNode *motorsNode;
 	HomieNode *motorNode[8];
 
