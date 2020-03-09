@@ -28,7 +28,7 @@ bool modeHandler(const HomieRange& range, const String& value) {
 }
 
 bool directionHandler(const HomieRange& range, const String& value) {
-	bool boolValue = value.equalsIgnoreCase("true");
+	bool boolValue = value.equalsIgnoreCase("in");
 
 	VentilationController::getInstance()->setDirection(boolValue);
   	return true;
@@ -78,7 +78,7 @@ bool motorSpeedHandler7(const HomieRange& range, const String& value) {
 
 
 bool setMotorDirection(const uint8_t motorNumber, const String& value) {
-	bool boolValue = value.equalsIgnoreCase("true");
+	bool boolValue = value.equalsIgnoreCase("in");
 
 	VentilationController::getInstance()->setDirection(motorNumber, boolValue);
   	return true;
@@ -304,7 +304,8 @@ bool VentilationController::isDirection() const {
 void VentilationController::setDirection(bool direction) {
 	if (mode != 0 && mode != 2) {
 		this->direction = direction;
-		motorsNode->setProperty("direction").send(String(direction));
+		motorsNode->setProperty("direction").send(direction ? "in" : "out");
+		Homie.getLogger() << "switching direction to " << (direction ? "in" : "out") << endl;
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i]->setTargetDirection(direction);
 			motorNode[i]->setProperty("direction").send(motors[i]->isFlowDirectionIn() ? "in" : "out");
