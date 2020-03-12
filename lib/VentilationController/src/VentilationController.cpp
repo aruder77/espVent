@@ -322,7 +322,7 @@ void VentilationController::setDirection(bool direction) {
 		Homie.getLogger() << "switching direction to " << (direction ? "in" : "out") << endl;
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i]->setTargetDirection(direction);
-			motorNode[i]->setProperty("direction").send(direction ? "in" : "out");
+			motorNode[i]->setProperty("direction").send(motors[i]->isFlowDirectionIn() ? "in" : "out");
 		}
 	}
 }
