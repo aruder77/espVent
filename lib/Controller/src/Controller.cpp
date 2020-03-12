@@ -97,6 +97,7 @@ Controller::Controller()
 
   // create all modules 
   modules.addModule(VentilationController::getInstance());
+  modules.addModule(DisplayControl::getInstance());
 
   Homie_setFirmware("espVent", "1.0.0");
   Homie_setBrand("espVent");  

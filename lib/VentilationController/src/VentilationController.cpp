@@ -131,7 +131,7 @@ VentilationController *VentilationController::getInstance()
 }
 
 VentilationController::VentilationController() {
-	memNode = new HomieNode("memory", "Memory", "memory");
+	memNode = new HomieNode("controller", "Controller", "controller");
 	motorsNode = new HomieNode("motors", "Motors", "ventilation");
 	motorNode[0] = new HomieNode("motor0", "Motor 0", "ventilation");
 	motorNode[1] = new HomieNode("motor1", "Motor 1", "ventilation");
@@ -144,6 +144,10 @@ VentilationController::VentilationController() {
 
 	memNode->advertise("freeHeap")
 			.setName("free heap")
+			.setDatatype("integer");
+
+	memNode->advertise("maxTimeBetweenCycles")
+			.setName("max time between cycles")
 			.setDatatype("integer");
 
 	motorsNode->advertise("speed")
@@ -275,17 +279,27 @@ const char *VentilationController::getName() {
 }
 
 void VentilationController::every100Milliseconds() {
+	uint32_t currentMillis = millis();
+	uint32_t diff = currentMillis - lastMillis;
+	lastMillis = currentMillis;
+	if (diff > maxMillis && diff < 1000) {
+		maxMillis = diff;
+	} 
+
 	// after DIRECTION_CHANGE_INTERVAL, change direction
 	if (loopCounter == directionChangeLoopCount) {
 		// only in mode 0, change direction
 		if (mode == 0) {
-			Homie.getLogger() << "changing direction..." << endl;
 			this->setDirection(!this->isDirection());
-
-			// publish free memory
-			memNode->setProperty("freeHeap").send(String(ESP.getFreeHeap()));
-			Homie.getLogger() << "free heap: " << ESP.getFreeHeap() << endl;
 		}
+
+		// publish free memory
+		memNode->setProperty("freeHeap").send(String(ESP.getFreeHeap()));
+		Homie.getLogger() << "free heap: " << ESP.getFreeHeap() << endl;
+
+		memNode->setProperty("maxTimeBetweenCycles").send(String(maxMillis));
+		maxMillis = 0;
+
 		loopCounter = 0;
 	}
 
@@ -302,13 +316,13 @@ bool VentilationController::isDirection() const {
 }
 
 void VentilationController::setDirection(bool direction) {
-	if (mode != 0 && mode != 2) {
+	if (mode != 2) {
 		this->direction = direction;
 		motorsNode->setProperty("direction").send(direction ? "in" : "out");
 		Homie.getLogger() << "switching direction to " << (direction ? "in" : "out") << endl;
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i]->setTargetDirection(direction);
-			motorNode[i]->setProperty("direction").send(motors[i]->isFlowDirectionIn() ? "in" : "out");
+			motorNode[i]->setProperty("direction").send(direction ? "in" : "out");
 		}
 	}
 }

@@ -74,6 +74,9 @@ private:
 	uint8_t motorPwmLast[MOTOR_COUNT];
 	bool motorDirectionLast[MOTOR_COUNT];
 
+	uint32_t maxMillis = 0;
+	uint32_t lastMillis = 0;
+
 	// keep last speed before powerOff
 	uint8_t speedBeforePowerOff = 25;
 

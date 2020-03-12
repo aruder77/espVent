@@ -20,6 +20,7 @@
 #include <Module.h>
 #include <Homie.h>
 #include <VentilationController.h>
+#include <DisplayControl.h>
 
 
 class Modules {

@@ -11,6 +11,7 @@
 #include <Arduino.h>
 #include <Module.h>
 #include <esp32-hal-ledc.h>
+#include <Homie.h>
 
 
 class MotorController {
