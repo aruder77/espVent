@@ -22,6 +22,8 @@
 #include <VentilationController.h>
 #include <DisplayControl.h>
 
+#define VERSION "1.0.3"
+
 
 class Modules {
     private:

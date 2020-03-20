@@ -94,7 +94,7 @@ void DisplayControl::displayPumpState(bool valveState) {
 
 void DisplayControl::displayVersion(char *version) {
     char buffer[100];
-    sprintf(buffer, "Heatmaster %s", version);
+    sprintf(buffer, "EspVent %s", version);
     tft.drawString(buffer, 0, 0, 2);
 }
 

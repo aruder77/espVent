@@ -99,9 +99,9 @@ Controller::Controller()
   modules.addModule(VentilationController::getInstance());
   modules.addModule(DisplayControl::getInstance());
 
-  Homie_setFirmware("espVent", "1.0.0");
+  Homie_setFirmware("espVent", VERSION);
   Homie_setBrand("espVent");  
-  Homie.setLoopFunction([]() { controller->workLoop(); } );  
+  DisplayControl::getInstance()->displayVersion(VERSION);
   Homie.setSetupFunction([]() { controller->setup(); });
 
   Homie.setup();  
@@ -124,9 +124,7 @@ void Controller::setup() {
 void Controller::loop()
 {
   Homie.loop();
-}
 
-void Controller::workLoop() {
   unsigned long currentMillis = millis();
 
   modules.loop();
