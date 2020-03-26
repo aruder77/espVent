@@ -20,7 +20,7 @@
 #include <Module.h>
 #include <TFT_eSPI.h> // Graphics and font library for ST7735 driver chip
 #include <SPI.h>
-
+#include <Homie.h>
 
 class DisplayControl : public Module {
 

@@ -101,7 +101,6 @@ Controller::Controller()
 
   Homie_setFirmware("espVent", VERSION);
   Homie_setBrand("espVent");  
-  DisplayControl::getInstance()->displayVersion(VERSION);
   Homie.setSetupFunction([]() { controller->setup(); });
 
   Homie.setup();  
@@ -118,6 +117,8 @@ void Controller::setup() {
   for (int i = 0; i < modules.count(); i++) {
     modules.getAt(i)->afterSetup();
   }
+
+  DisplayControl::getInstance()->displayVersion(VERSION);
 }
 
 

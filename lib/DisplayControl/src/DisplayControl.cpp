@@ -38,7 +38,6 @@ void DisplayControl::setup() {
   tft.fillScreen(TFT_BLACK);
 
   tft.setTextColor(TFT_WHITE, TFT_BLACK); // Note: the new fonts do not draw the background colour
-  tft.drawString("Heatmaster 1.0", 0, 0, 2);
   tft.drawRightString("IP: 192.168.178.45", 320, 0, 2);
 
   tft.drawCentreString("Valve: 25 %", 160, 120 - tft.fontHeight(4) - 5, 4);
@@ -54,6 +53,9 @@ void DisplayControl::setup() {
   tft.setTextColor(TFT_RED, TFT_BLACK); // Note: the new fonts do not draw the background colour
   tft.drawCentreString("Configuration Mode", 160, 160, 2);
   tft.drawCentreString("SSID: heatmaster, http://192.168.4.1", 160, 180, 2);
+
+  Homie.getLogger() << "Display Setup" << endl;
+
 }
 
 const char *DisplayControl::getName() {
@@ -95,6 +97,7 @@ void DisplayControl::displayPumpState(bool valveState) {
 void DisplayControl::displayVersion(char *version) {
     char buffer[100];
     sprintf(buffer, "EspVent %s", version);
+    tft.setTextColor(TFT_WHITE, TFT_BLACK); 
     tft.drawString(buffer, 0, 0, 2);
 }
 

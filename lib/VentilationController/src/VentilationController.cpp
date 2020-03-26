@@ -322,7 +322,7 @@ void VentilationController::setDirection(bool direction) {
 		Homie.getLogger() << "switching direction to " << (direction ? "in" : "out") << endl;
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i]->setTargetDirection(direction);
-			motorNode[i]->setProperty("direction").send(motors[i]->isFlowDirectionIn() ? "in" : "out");
+			motorNode[i]->setProperty("direction").send((motors[i]->isInverseDirection() ? !direction : direction) ? "in" : "out");
 		}
 	}
 }
@@ -330,7 +330,7 @@ void VentilationController::setDirection(bool direction) {
 void VentilationController::setDirection(uint8_t motorNumber, bool direction) {
 	if (mode == 3) {
 		motors[motorNumber]->setTargetDirection(direction);
-		motorNode[motorNumber]->setProperty("direction").send(motors[motorNumber]->isFlowDirectionIn() ? "in" : "out");
+		motorNode[motorNumber]->setProperty("direction").send(direction ? "in" : "out");
 	}
 }
 
@@ -344,6 +344,29 @@ void VentilationController::setMode(int mode) {
 	Homie.getLogger() << logBuffer;
 	this->mode = mode;
 	motorsNode->setProperty("mode").send(String(mode));
+
+	if (mode == 0 || mode == 1) {
+		// regular switching mode
+		for (int i = 0; i < MOTOR_COUNT; i++) {
+			motors[i]->setInverseDirection(i % 2 != 0);
+			motors[i]->setTargetDirection(direction);
+			motorNode[i]->setProperty("direction").send((motors[i]->isInverseDirection() ? !direction : direction) ? "in" : "out");
+		}
+	} else if (mode == 2) {
+		// all in, no inverse direction
+		for (int i = 0; i < MOTOR_COUNT; i++) {
+			motors[i]->setInverseDirection(false);
+			motors[i]->setTargetDirection(true);
+			motorNode[i]->setProperty("direction").send("in");
+		}
+	} else if (mode == 3) {
+		// manual mode, no inverse direction
+		for (int i = 0; i < MOTOR_COUNT; i++) {
+			motors[i]->setInverseDirection(false);
+			motors[i]->setTargetDirection(direction);
+			motorNode[i]->setProperty("direction").send(direction ? "in" : "out");
+		}
+	}
 }
 
 uint8_t VentilationController::getSpeed() const {
