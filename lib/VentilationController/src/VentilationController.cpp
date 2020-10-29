@@ -393,7 +393,7 @@ void VentilationController::setSpeed(uint8_t motorNumber, uint8_t speed) {
 	if (this->mode == 1) {
 		// in mode 0, speed can only be adjusted for all motors
 		setSpeed(speed);
-	} else if (this->mode == 0) {
+	} else {
 		motors[motorNumber]->setTargetSpeed(speed);
 		motorNode[motorNumber]->setProperty("speed").send(String(speed));
 	}
