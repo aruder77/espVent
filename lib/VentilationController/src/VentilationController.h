@@ -22,6 +22,7 @@ public:
 
 	virtual const char *getName();
 
+	virtual void setup();
 	void every100Milliseconds();
 
 	bool isDirection() const;
@@ -41,14 +42,14 @@ public:
 	void commandReceived(const char *command, const char *payload);
 	void getTelemetryData(char *targetBuffer);
 
+	void setCycleTime(int seconds);
+
+
 private:
 	static const uint8_t MOTOR_COUNT = 8;
 
 	// digital pins for power
 	static const uint8_t POWER_PIN = 9;
-
-	// time interval between direction changes in mode 0 in seconds
-	static const int DIRECTION_CHANGE_INTERVAL = 75;
 
 	static VentilationController *instance;
 	VentilationController();
@@ -58,12 +59,22 @@ private:
 	HomieNode *motorsNode;
 	HomieNode *motorNode[8];
 
+  	HomieSetting<bool> *inverseMotor1;
+  	HomieSetting<bool> *inverseMotor2;
+  	HomieSetting<bool> *inverseMotor3;
+  	HomieSetting<bool> *inverseMotor4;
+  	HomieSetting<bool> *inverseMotor5;
+  	HomieSetting<bool> *inverseMotor6;
+  	HomieSetting<bool> *inverseMotor7;
+  	HomieSetting<bool> *inverseMotor8;
+
 	bool powerOn = true;
 	uint8_t speed = 25;
 	int mode = 0;
 	bool direction = true;
 	long directionChangeLoopCount = 0;
 	int loopCounter = 0;
+	int cycleTime = 75;
 
 	// these are backups for status updates
 	bool powerOnLast = powerOn;

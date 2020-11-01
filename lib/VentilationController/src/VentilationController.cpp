@@ -34,6 +34,12 @@ bool directionHandler(const HomieRange& range, const String& value) {
   	return true;
 }
 
+bool cycleTimeHandler(const HomieRange& range, const String& value) {
+	long intValue = value.toInt();
+	VentilationController::getInstance()->setCycleTime(intValue);
+	return true;
+}
+
 bool setMotorSpeed(const uint8_t motorNumber, const String& value) {
 	long intValue = value.toInt();
 	if (intValue < 0 || intValue > 100) {
@@ -165,6 +171,10 @@ VentilationController::VentilationController() {
 			.setDatatype("enum")
 			.setFormat("in,out")
 			.settable(directionHandler);
+	motorsNode->advertise("cycleTime")
+			.setName("cycleTime")
+			.setDatatype("integer")
+			.settable(cycleTimeHandler);
 
 	motorNode[0]->advertise("speed")
 			.setName("speed")
@@ -254,6 +264,23 @@ VentilationController::VentilationController() {
 			.setFormat("in,out")
 			.settable(motorDirectionHandler7);
 
+  	inverseMotor1 = new HomieSetting<bool>("inverseMotor1", "Inverse rotation direction of motor 1.");
+  	inverseMotor2 = new HomieSetting<bool>("inverseMotor2", "Inverse rotation direction of motor 2.");
+  	inverseMotor3 = new HomieSetting<bool>("inverseMotor3", "Inverse rotation direction of motor 3.");
+  	inverseMotor4 = new HomieSetting<bool>("inverseMotor4", "Inverse rotation direction of motor 4.");
+  	inverseMotor5 = new HomieSetting<bool>("inverseMotor5", "Inverse rotation direction of motor 5.");
+  	inverseMotor6 = new HomieSetting<bool>("inverseMotor6", "Inverse rotation direction of motor 6.");
+  	inverseMotor7 = new HomieSetting<bool>("inverseMotor7", "Inverse rotation direction of motor 7.");
+  	inverseMotor8 = new HomieSetting<bool>("inverseMotor8", "Inverse rotation direction of motor 8.");
+	inverseMotor1->setDefaultValue(false);
+	inverseMotor2->setDefaultValue(true);
+	inverseMotor3->setDefaultValue(false);
+	inverseMotor4->setDefaultValue(true);
+	inverseMotor5->setDefaultValue(false);
+	inverseMotor6->setDefaultValue(true);
+	inverseMotor7->setDefaultValue(false);
+	inverseMotor8->setDefaultValue(true);
+
 	// initialize motors
 	motors[0] = new MotorController(4 , 1, false);		// Flur EG
 	motors[1] = new MotorController(13, 2, true);		// Wohnzimmer EG
@@ -263,12 +290,11 @@ VentilationController::VentilationController() {
 	motors[5] = new MotorController(25, 6, true);		// Kind 2
 	motors[6] = new MotorController(33, 7, false);
 	motors[7] = new MotorController(32, 8, true);
-
 	// calculate directionChangeLoops
-	directionChangeLoopCount = DIRECTION_CHANGE_INTERVAL * 1000.0 / 100;
+	directionChangeLoopCount = cycleTime * 1000.0 / 100;
 
 	setPowerOn(true);
-	setSpeed(20);
+	setSpeed(20);	
 }
 
 VentilationController::~VentilationController() {
@@ -276,6 +302,17 @@ VentilationController::~VentilationController() {
 
 const char *VentilationController::getName() {
 	return "VentilationController";
+}
+
+void VentilationController::setup() {
+	motors[0]->setInverseDirection(inverseMotor1->get());
+	motors[1]->setInverseDirection(inverseMotor2->get());
+	motors[2]->setInverseDirection(inverseMotor3->get());
+	motors[3]->setInverseDirection(inverseMotor4->get());
+	motors[4]->setInverseDirection(inverseMotor5->get());
+	motors[5]->setInverseDirection(inverseMotor6->get());
+	motors[6]->setInverseDirection(inverseMotor7->get());
+	motors[7]->setInverseDirection(inverseMotor8->get());
 }
 
 void VentilationController::every100Milliseconds() {
@@ -332,6 +369,11 @@ void VentilationController::setDirection(uint8_t motorNumber, bool direction) {
 		motors[motorNumber]->setTargetDirection(direction);
 		motorNode[motorNumber]->setProperty("direction").send(direction ? "in" : "out");
 	}
+}
+
+void VentilationController::setCycleTime(int seconds) {
+	this->cycleTime = seconds;
+	motorsNode->setProperty("cycleTime").send(String(cycleTime));
 }
 
 int VentilationController::getMode() const {

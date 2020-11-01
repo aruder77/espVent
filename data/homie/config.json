@@ -19,6 +19,6 @@
       "enabled": true
     },
     "settings": {
-      "percentage": 55
+      "inverseMotor1": false
     }
   }
