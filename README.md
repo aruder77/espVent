@@ -35,20 +35,14 @@ The EspVent Firmware is based on my generic firmware for the Esp32 [espGeneric](
 
 #### Initial configuration
 
-After successful upload, the esp will reboot and go into configuration portal mode. This is indicated by the flashing blue LED.
-In this mode, the microcontroller will span a new WiFi network 'espVent'. 
+The device needs to be configured so that it can connect to your WiFi network and MQTT server. The configuration is done by editing and uploading
+the file data/homie/config.json. 
 
-- connecto to the WiFi with SSID 'espVent' using the password '~CM3CDUx'
-- Open http://192.168.4.1 with your browser. A configuration page should appear.
-- Click 'Configure WiFi'
-- Select your Wifi network and enter your WPA2 key (first two fields)
-- you can usually leave the next two fields as-is (2 and 15)
-- if you want a different id for your controller than 'espVent', enter it in the field 'Client-ID'. This id will be used for all communication with the device.
-- you can choose a different configuration portal WPA2 key in the next field. Replace '~CM3CDUx' with your key. Please make sure that it is a valid WPA2 key, there is no validation!
-- Enter your MQTT server settings in the next three fields: hostname/IP-address, username, password.
-- Click 'Save'
+- set wifi.ssid and wifi.password
+- set mqtt settings
+- execute 
+```pio run --target uploadfs``` to upload the file to the device
 
-This is it. Your device should reboot and connect to your WiFi and MQTT server. The blue LED should be on. On successful connect, the controller sends a hello message to MQTT topic `tele/<clientId>/hello`. The client id is 'espVent' or whatever you entered instead during initial configuration.
 
 #### Ventilation modes
 
@@ -59,6 +53,7 @@ The controller supports three different modes for the ventilation system. The fi
 | 0                | Normal ventilation mode. The fans are blowing 75 seconds in one direction and then 75 seconds in the other direction. |
 | 1                | "hot summer mode". Half of the fans are always blowing in, the other half are always blowing out. |
 | 2                | All fans are blowing in. |
+| 3                | Manual mode. Speed and direction can be set individually for each fan. |
 
 Individual fan speed control is only supported in mode 0 for security reasons.
 
@@ -106,15 +101,9 @@ Use the external button to trigger basic functions like
 
 #### Over-the-air firmware updates
 
-The firmware supports over-the-air updates. Just send the following command via MQTT:
+The firmware supports over-the-air updates. You need the the ota_update.py script to upload a new firmware version to the device over the air.
 
-topic: `cmnd/<client-id>/ota`
-
-payload: `url:<url-to-firmware.bin>,md5:<md5-hash-of-firmware.bin`
-
-The easiest way to send the ota command is via a mqtt command line tool, such as mosquitto_pub and mosquitto_sub:
-
-`mosquitto_pub -h mqtt-server.local -t cmnd/espVent/ota -m "url:http://192.168.178.20:8080/firmware.bin,md5:xy"`
+ota_updater.py -l <mqttServer> -u <mqttUsername> -d <mqttPassword> -t "devices/" -i "espVent" .pio/build/nodemcu-32s/firmware.bin
 
 ## EspVent Hardware
 
