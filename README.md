@@ -59,31 +59,21 @@ Individual fan speed control is only supported in mode 0 for security reasons.
 
 #### MQTT communication
 
-The communication with the espVent controller follows the following scheme:
-- `cmnd/<client-id>/` prefixes all commands which can be sent to the contoller
-- `config/<client-id>` prefixes configuration changes which can be sent to the controller
-- `tele/<client-id>` prefixes telemetric data which is sent by the controller in 10-second intervals
-- `state/<client-id>` prefixes state changes which are sent by the controller 
+The communication with the espVent controller follows the homie communication scheme.
 
-The following commands are supported by the controller:
+| node       | property  | settable | datatype   | unit    | description                                  |
+| controller | freeHeap  | no       | integer    | byte    | the available heap space in bytes            |
+| motors     | mode      | yes      | 0, 1, 2, 3 | enum    | the ventilation mode as described above      |
+|            | speed     | yes      | 0..100     | percent | the ventilation speed for all motors         |
+|            | direction | yes      | in, out    | enum    | the ventilation direction                    |
+|            | cycleTime | yes      | integer    | seconds | the time between direction changes in mode 0 |
+| motor0..7  | speed     | yes      | 0..100     | percent | the ventilation speed for motor x            |
+| motor0..7  | direction | yes      | in, out    | enum    | the ventilation direction for motor x        |
 
-| topic | description | example value |
-|-------|-------------|---------------|
-| `cmnd/<client-id>/mode` | The mode of the ventilation system. Supported values are 0 (changing directions), 1 (non-changing) and 2 (all fans blowing inside)| 1 |
-| `cmnd/<client-id>/speed` | The target speed for all fans in percent. | 75 |
-| `cmnd/<client-id>/direction` | If the direction should be inverted in mode 0 and 1. "true" or "false". | true |
-| `cmnd/<client-id>/motors/<0-7>/speed` | The target speed for the motor with the given number (0-7) in percent. Only in mode 0 for security reasons. | 85 |
+The homie root topic is 'devices', the device name is 'espVent'.
 
-After a command has been successfully received by the controller, the controller sends a status update of the form `state/<client-id>/...`.
-
-Additionally to the confirmation messages these state updates are also sent:
-
-| topic | description | example value |
-|-------|-------------|---------------|
-| `state/<client-id>/motors/<0-7>/flowDirection` | The current air flow direction of the respective fan. "in" or "out". | in |
-| `state/<client-id>/motors/<0-7>/pwm` | The pwm value which is sent to the fan motor. | 222 |
-
-Every 10 seconds, a telemetry message is sent to the topic `tele/<client-id>/status` with overall status information in json format.
+The device reports its property values with the topic: 'devices/espVent/<node>/<property>'. 
+The property can be set by posting the new value to the setter topic 'devices/espVent/<node>/<property>/set'.
 
 
 #### Button usage
@@ -101,7 +91,7 @@ Use the external button to trigger basic functions like
 
 #### Over-the-air firmware updates
 
-The firmware supports over-the-air updates. You need the the ota_update.py script to upload a new firmware version to the device over the air.
+The firmware supports over-the-air updates. You need the the ota_update.py script from homie-esp8266 to upload a new firmware version to the device over the air.
 
 ota_updater.py -l <mqttServer> -u <mqttUsername> -d <mqttPassword> -t "devices/" -i "espVent" .pio/build/nodemcu-32s/firmware.bin
 
