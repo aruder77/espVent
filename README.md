@@ -62,6 +62,7 @@ Individual fan speed control is only supported in mode 0 for security reasons.
 The communication with the espVent controller follows the homie communication scheme.
 
 | node       | property  | settable | datatype   | unit    | description                                  |
+|------------|-----------|----------|------------|---------|----------------------------------------------|
 | controller | freeHeap  | no       | integer    | byte    | the available heap space in bytes            |
 | motors     | mode      | yes      | 0, 1, 2, 3 | enum    | the ventilation mode as described above      |
 |            | speed     | yes      | 0..100     | percent | the ventilation speed for all motors         |
