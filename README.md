@@ -15,7 +15,7 @@ EspVent is a complete substitiution for the LIG Activar (or similar) controller 
 
 ## EspVent Firmware
 
-The EspVent Firmware is based on my generic firmware for the Esp32 [espGeneric](https://github.com/aruder77/esp32Generic). 
+The EspVent Firmware is based on the great framework homie-esp32 https://github.com/homieiot/. 
 
 ### Installation instructions
 
