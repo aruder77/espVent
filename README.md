@@ -15,7 +15,7 @@ EspVent is a complete substitiution for the LIG Activar (or similar) controller 
 
 ## EspVent Firmware
 
-The EspVent Firmware is based on the great framework homie-esp32 https://github.com/homieiot/. 
+The EspVent Firmware is based on the great framework homie-esp8266 https://github.com/homieiot/homie-esp8266. Documentation can be found at https://homieiot.github.io/homie-esp8266/docs/stable/ 
 
 ### Installation instructions
 
