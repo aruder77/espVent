@@ -28,7 +28,7 @@ bool modeHandler(const HomieRange& range, const String& value) {
 }
 
 bool directionHandler(const HomieRange& range, const String& value) {
-	bool boolValue = value.equalsIgnoreCase("in");
+	bool boolValue = value.equalsIgnoreCase("true");
 
 	VentilationController::getInstance()->setDirection(boolValue);
   	return true;
@@ -84,7 +84,7 @@ bool motorSpeedHandler7(const HomieRange& range, const String& value) {
 
 
 bool setMotorDirection(const uint8_t motorNumber, const String& value) {
-	bool boolValue = value.equalsIgnoreCase("in");
+	bool boolValue = value.equalsIgnoreCase("true");
 
 	VentilationController::getInstance()->setDirection(motorNumber, boolValue);
   	return true;
@@ -168,8 +168,7 @@ VentilationController::VentilationController() {
 			.settable(modeHandler);
 	motorsNode->advertise("direction")
 			.setName("direction")
-			.setDatatype("enum")
-			.setFormat("in,out")
+			.setDatatype("boolean")
 			.settable(directionHandler);
 	motorsNode->advertise("cycleTime")
 			.setName("cycleTime")
@@ -183,8 +182,7 @@ VentilationController::VentilationController() {
 			.settable(motorSpeedHandler0);
 	motorNode[0]->advertise("direction")
 			.setName("direction")
-			.setDatatype("enum")
-			.setFormat("in,out")
+			.setDatatype("boolean")
 			.settable(motorDirectionHandler0);
 
 	motorNode[1]->advertise("speed")
@@ -194,8 +192,7 @@ VentilationController::VentilationController() {
 			.settable(motorSpeedHandler1);
 	motorNode[1]->advertise("direction")
 			.setName("direction")
-			.setDatatype("enum")
-			.setFormat("in,out")
+			.setDatatype("boolean")
 			.settable(motorDirectionHandler1);
 
 	motorNode[2]->advertise("speed")
@@ -205,8 +202,7 @@ VentilationController::VentilationController() {
 			.settable(motorSpeedHandler2);
 	motorNode[2]->advertise("direction")
 			.setName("direction")
-			.setDatatype("enum")
-			.setFormat("in,out")
+			.setDatatype("boolean")
 			.settable(motorDirectionHandler3);
 
 	motorNode[3]->advertise("speed")
@@ -216,8 +212,7 @@ VentilationController::VentilationController() {
 			.settable(motorSpeedHandler3);
 	motorNode[3]->advertise("direction")
 			.setName("direction")
-			.setDatatype("enum")
-			.setFormat("in,out")
+			.setDatatype("boolean")
 			.settable(motorDirectionHandler3);
 
 	motorNode[4]->advertise("speed")
@@ -227,8 +222,7 @@ VentilationController::VentilationController() {
 			.settable(motorSpeedHandler4);
 	motorNode[4]->advertise("direction")
 			.setName("direction")
-			.setDatatype("enum")
-			.setFormat("in,out")
+			.setDatatype("boolean")
 			.settable(motorDirectionHandler4);
 
 	motorNode[5]->advertise("speed")
@@ -238,8 +232,7 @@ VentilationController::VentilationController() {
 			.settable(motorSpeedHandler5);
 	motorNode[5]->advertise("direction")
 			.setName("direction")
-			.setDatatype("enum")
-			.setFormat("in,out")
+			.setDatatype("boolean")
 			.settable(motorDirectionHandler5);
 
 	motorNode[6]->advertise("speed")
@@ -249,8 +242,7 @@ VentilationController::VentilationController() {
 			.settable(motorSpeedHandler6);
 	motorNode[6]->advertise("direction")
 			.setName("direction")
-			.setDatatype("enum")
-			.setFormat("in,out")
+			.setDatatype("boolean")
 			.settable(motorDirectionHandler6);
 
 	motorNode[7]->advertise("speed")
@@ -260,8 +252,7 @@ VentilationController::VentilationController() {
 			.settable(motorSpeedHandler7);
 	motorNode[7]->advertise("direction")
 			.setName("direction")
-			.setDatatype("enum")
-			.setFormat("in,out")
+			.setDatatype("boolean")
 			.settable(motorDirectionHandler7);
 
   	inverseMotor1 = new HomieSetting<bool>("inverseMotor1", "Inverse rotation direction of motor 1.");
@@ -355,11 +346,11 @@ bool VentilationController::isDirection() const {
 void VentilationController::setDirection(bool direction) {
 	if (mode != 2) {
 		this->direction = direction;
-		motorsNode->setProperty("direction").send(direction ? "in" : "out");
-		Homie.getLogger() << "switching direction to " << (direction ? "in" : "out") << endl;
+		motorsNode->setProperty("direction").send(direction ? "true" : "false");
+		Homie.getLogger() << "switching direction to " << (direction ? "out" : "in") << endl;
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i]->setTargetDirection(direction);
-			motorNode[i]->setProperty("direction").send((motors[i]->isInverseDirection() ? !direction : direction) ? "in" : "out");
+			motorNode[i]->setProperty("direction").send((motors[i]->isInverseDirection() ? !direction : direction) ? "true" : "false");
 		}
 	}
 }
@@ -367,7 +358,7 @@ void VentilationController::setDirection(bool direction) {
 void VentilationController::setDirection(uint8_t motorNumber, bool direction) {
 	if (mode == 3) {
 		motors[motorNumber]->setTargetDirection(direction);
-		motorNode[motorNumber]->setProperty("direction").send(direction ? "in" : "out");
+		motorNode[motorNumber]->setProperty("direction").send(direction ? "true" : "false");
 	}
 }
 
@@ -392,21 +383,21 @@ void VentilationController::setMode(int mode) {
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i]->setInverseDirection(i % 2 != 0);
 			motors[i]->setTargetDirection(direction);
-			motorNode[i]->setProperty("direction").send((motors[i]->isInverseDirection() ? !direction : direction) ? "in" : "out");
+			motorNode[i]->setProperty("direction").send((motors[i]->isInverseDirection() ? !direction : direction) ? "true" : "false");
 		}
 	} else if (mode == 2) {
 		// all in, no inverse direction
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i]->setInverseDirection(false);
-			motors[i]->setTargetDirection(true);
-			motorNode[i]->setProperty("direction").send("in");
+			motors[i]->setTargetDirection(false);
+			motorNode[i]->setProperty("direction").send("false");
 		}
 	} else if (mode == 3) {
 		// manual mode, no inverse direction
 		for (int i = 0; i < MOTOR_COUNT; i++) {
 			motors[i]->setInverseDirection(false);
 			motors[i]->setTargetDirection(direction);
-			motorNode[i]->setProperty("direction").send(direction ? "in" : "out");
+			motorNode[i]->setProperty("direction").send(direction ? "true" : "false");
 		}
 	}
 }

@@ -33,6 +33,12 @@ The EspVent Firmware is based on the great framework homie-esp8266 https://githu
 
 ### Usage
 
+### Erase flash
+
+If the device was used before for something elase, please erase the whole flash storage.
+- execute
+```pio run --target erase```
+
 #### Initial configuration
 
 The device needs to be configured so that it can connect to your WiFi network and MQTT server. The configuration is done by editing and uploading
